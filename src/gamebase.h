@@ -37,7 +37,7 @@ private:
                                   QString &debug) override;
     void getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
                           QString platform) override;
-    void getGameData(GameEntry &game) override;
+    void getGameData(GameEntry &game, int media) override;
     void getCover(GameEntry &game) override;
     QByteArray loadImageData(const QString &subFolder, QString &fileName);
 

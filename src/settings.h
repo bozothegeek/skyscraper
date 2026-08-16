@@ -86,6 +86,7 @@ struct Settings {
     int jpgQuality = 95;
     bool subdirs = true;
     bool onlyMissing = false;
+    bool missingMedia = false;
     QString startAt = "";
     QString endAt = "";
     bool pretend = false;
@@ -263,6 +264,7 @@ private:
         {"minMatch",                QPair<QString, int>("int",  CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"nameTemplate",            QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"onlyMissing",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"missingMedia",            QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"platform",                QPair<QString, int>("str",  CfgType::MAIN                                                            )},
         {"pretend",                 QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM                                        )},
         {"raExtra",                 QPair<QString, int>("str",                  CfgType::PLATFORM | CfgType::FRONTEND                    )},

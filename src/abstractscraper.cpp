@@ -87,19 +87,19 @@ void AbstractScraper::getSearchResults(QList<GameEntry> &gameEntries,
     }
 }
 
-void AbstractScraper::getGameData(GameEntry &game) {
+void AbstractScraper::getGameData(GameEntry &game, int media) {
     netComm->request(game.url);
     q.exec();
     data = netComm->getData();
     // ncprintf("URL IS: '%s'\n", game.url.toStdString().c_str());
     // ncprintf("DATA IS:\n'%s'\n", data.data());
-    populateGameEntry(game);
+    populateGameEntry(game, media);
 }
 
 void AbstractScraper::getTitle(GameEntry &) {}
 
-void AbstractScraper::populateGameEntry(GameEntry &game) {
-    for (int t : fetchOrder) {
+void AbstractScraper::populateGameEntry(GameEntry &game, int media) {
+    auto processElement = [this, &game](int t) {
         switch (t) {
         case GameEntry::Elem::TITLE:
             getTitle(game);
@@ -174,6 +174,14 @@ void AbstractScraper::populateGameEntry(GameEntry &game) {
             }
             break;
         default:;
+        }
+    };
+
+    if (media != -1) {
+        processElement(media);
+    } else {
+        for (int t : fetchOrder) {
+            processElement(t);
         }
     }
 }

@@ -41,7 +41,7 @@ private:
                                   QString &debug) override;
     void getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
                           QString platform) override;
-    void getGameData(GameEntry &game) override;
+    void getGameData(GameEntry &game, int media) override;
     QByteArray loadBinaryData(const QString fileName);
     void loadVideoData(GameEntry &game, const QString fileName);
     QString getAbsoluteFileName(const QString fileName);

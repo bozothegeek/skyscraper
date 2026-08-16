@@ -28,7 +28,7 @@
 LocalScraper::LocalScraper(Settings *config, QSharedPointer<NetManager> manager)
     : AbstractScraper(config, manager, MatchType::MATCH_ONE) {}
 
-void LocalScraper::getGameData(GameEntry &) {}
+void LocalScraper::getGameData(GameEntry &,int) {}
 
 void LocalScraper::runPasses(QList<GameEntry> &, const QFileInfo &, QString &,
                              QString &) {}

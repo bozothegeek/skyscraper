@@ -45,7 +45,7 @@ private:
     QEventLoop limiter;
     void getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
                           QString platform) override;
-    void getGameData(GameEntry &game) override;
+    void getGameData(GameEntry &game, int media) override;
     void getReleaseDate(GameEntry &game) override;
     void getPlayers(GameEntry &game) override;
     void getTags(GameEntry &game) override;

@@ -435,7 +435,7 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
              "not plan to use the wheel artwork in 'artwork.xml'"},
             {"onlymissing", "Tells Skyscraper to skip all files which already "
                             "have any data from any source in the cache."},
-            {"missingMedia", "Tells Skyscraper to scrap missing media for game which"
+            {"missingmedia", "Tells Skyscraper to scrap missing media for game which"
                             "already have any data from any source in the cache."},
             {"pretend",
              "Only relevant when generating a game list. It disables the game "

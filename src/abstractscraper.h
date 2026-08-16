@@ -47,7 +47,7 @@ public:
     AbstractScraper(Settings *config, QSharedPointer<NetManager> manager,
                     MatchType type = ABSTRACT, int timeout = 30 /* secs */);
     virtual ~AbstractScraper();
-    virtual void getGameData(GameEntry &game);
+    virtual void getGameData(GameEntry &game, int media = -1);
     virtual QList<QString> getSearchNames(const QFileInfo &info,
                                           QString &debug);
     virtual QString getCompareTitle(const QFileInfo &info);
@@ -75,7 +75,7 @@ protected:
 
     virtual void getSearchResults(QList<GameEntry> &gameEntries,
                                   QString searchName, QString platform);
-    virtual void populateGameEntry(GameEntry &game);
+    virtual void populateGameEntry(GameEntry &game, int media = -1);
     virtual void getDescription(GameEntry &game);
     virtual void getDeveloper(GameEntry &game);
     virtual void getPublisher(GameEntry &game);

@@ -161,7 +161,7 @@ void Igdb::getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
     }
 }
 
-void Igdb::getGameData(GameEntry &game) {
+void Igdb::getGameData(GameEntry &game, int media) {
     limiter.exec();
     const QStringList fields = {
         // clang-format off
@@ -207,7 +207,7 @@ void Igdb::getGameData(GameEntry &game) {
     }
 
     jsonObj = jsonDoc.array().first().toObject();
-    populateGameEntry(game);
+    populateGameEntry(game, media);
 }
 
 void Igdb::getReleaseDate(GameEntry &game) {
