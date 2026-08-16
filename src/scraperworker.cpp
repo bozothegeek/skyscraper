@@ -186,6 +186,25 @@ void ScraperWorker::run() {
                     cachedGame.platform = config.platform;
                 }
                 gameEntries.append(cachedGame);
+
+                //check here if we have missing media
+                // need "--flags missingmedia" with cache activated
+                // or media flags for some media as "video,manual,fanart and backcover"
+                if (config.missingMedia) {
+                    // binary data
+                    if (((cachedGame.coverFile == "") && config.cacheCovers) ||
+                       ((cachedGame.screenshotFile == "") && config.cacheScreenshots) ||
+                       ((cachedGame.wheelFile == "") && config.cacheWheels) ||
+                       ((cachedGame.marqueeFile == "") && config.cacheMarquees) ||
+                       ((cachedGame.textureFile == "") && config.cacheTextures) ||
+                       ((cachedGame.manualFile == "") && (config.cacheManuals || config.manuals)) ||
+                       ((cachedGame.fanartFile == "") && (config.cacheFanarts || config.fanart)) ||
+                       ((cachedGame.backcoverFile == "") && (config.cacheBackcovers || config.backcovers)) ||
+                       ((cachedGame.videoFile == "") && (config.cacheVideos  || config.videos)) ){
+                            // need to scrap in this case also
+                            scraper->runPasses(gameEntries, info, output, debug);
+                    }
+                }
             } else {
                 // divert into actual scraping
                 scraper->runPasses(gameEntries, info, output, debug);
@@ -317,7 +336,7 @@ void ScraperWorker::run() {
             QString("\033[1;34m---- Game '%1' found! :) ----\033[0m\n")
                 .arg(info.completeBaseName()));
 
-        if (!fromCache) {
+        if (!fromCache || config.missingMedia) {
             scraper->getGameData(game);
         }
 
@@ -524,11 +543,6 @@ void ScraperWorker::run() {
                 (config.cacheTextures || cacheScraper ? "" : " (uncached)")) +
             " (" + game.textureSrc + ")\n");
         if (config.videos) {
-            //check if video is missing first about a game already in cache
-            if (game.videoFormat.isEmpty() && config.missingMedia && fromCache){
-                //tentative to get only the missing video
-                scraper->getGameData(game, GameEntry::Elem::VIDEO);
-            }
             output.append(
                 "Video:          " +
                 QString((game.videoFormat.isEmpty() ? "\033[1;31mNO"

@@ -107,6 +107,9 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         (platformId == -1 ? "" : "&systemeid=" + QString::number(platformId)) +
         "&output=json&" + searchName;
 
+    ncprintf("Screenscraper Game Info URL: %s \n",
+             gameUrl.toStdString().c_str());
+
     tctr = 0;
     statusTimer.start(1000);
 
@@ -313,7 +316,10 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
     }
 }
 
-void ScreenScraper::getGameData(GameEntry &game, int media) { populateGameEntry(game, media); }
+void ScreenScraper::getGameData(GameEntry &game, int media) {
+    ncprintf("void ScreenScraper::getGameData(GameEntry &game, int media) \n");
+    populateGameEntry(game, media);
+}
 
 void ScreenScraper::getReleaseDate(GameEntry &game) {
     game.releaseDate = getJsonText(jsonObj["dates"].toArray(), REGION);
@@ -490,7 +496,9 @@ void ScreenScraper::getVideo(GameEntry &game) {
     }
     types.append("video");
     QString url = getJsonText(jsonObj["medias"].toArray(), NONE, types);
+    ncprintf("getvideo url is: '%s'\n", url.toStdString().c_str());
     if (!url.isEmpty()) {
+        ncprintf("downloadBinary(url, types.last(), game)\n");
         downloadBinary(url, types.last(), game);
     }
 }

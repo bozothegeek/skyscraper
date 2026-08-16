@@ -100,33 +100,35 @@ void AbstractScraper::getTitle(GameEntry &) {}
 
 void AbstractScraper::populateGameEntry(GameEntry &game, int media) {
     auto processElement = [this, &game](int t) {
+        //for dev debug
+        ncprintf("Populate Game Entry...");
         switch (t) {
         case GameEntry::Elem::TITLE:
-            getTitle(game);
+                getTitle(game);
             break;
         case GameEntry::Elem::DESCRIPTION:
-            getDescription(game);
+                getDescription(game);
             break;
         case GameEntry::Elem::DEVELOPER:
-            getDeveloper(game);
+                getDeveloper(game);
             break;
         case GameEntry::Elem::PUBLISHER:
-            getPublisher(game);
+                getPublisher(game);
             break;
         case GameEntry::Elem::PLAYERS:
-            getPlayers(game);
+                getPlayers(game);
             break;
         case GameEntry::Elem::AGES:
-            getAges(game);
+                getAges(game);
             break;
         case GameEntry::Elem::RATING:
-            getRating(game);
+                getRating(game);
             break;
         case GameEntry::Elem::TAGS:
-            getTags(game);
+                getTags(game);
             break;
         case GameEntry::Elem::RELEASEDATE:
-            getReleaseDate(game);
+                getReleaseDate(game);
             break;
         case GameEntry::Elem::COVER:
             if (config->cacheCovers) {
@@ -154,11 +156,15 @@ void AbstractScraper::populateGameEntry(GameEntry &game, int media) {
             }
             break;
         case GameEntry::Elem::VIDEO:
+            //for dev debug
+            ncprintf(" GameEntry::Elem::VIDEO");
             if (config->videos) {
                 getVideo(game);
             }
             break;
         case GameEntry::Elem::MANUAL:
+            //for dev debug
+            ncprintf(" GameEntry::Elem::MANUAL");
             if (config->manuals) {
                 getManual(game);
             }
@@ -175,6 +181,8 @@ void AbstractScraper::populateGameEntry(GameEntry &game, int media) {
             break;
         default:;
         }
+        //for dev debug
+        ncprintf("\n");
     };
 
     if (media != -1) {
