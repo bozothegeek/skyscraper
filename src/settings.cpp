@@ -512,6 +512,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->onlyMissing = v;
                 continue;
             }
+            if (k == "missingMedia") {
+                config->missingMedia = v;
+                continue;
+            }
             if (k == "pretend") {
                 config->pretend = v;
                 continue;
@@ -893,6 +897,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->cacheWheels = false;
     } else if (flag == "onlymissing") {
         config->onlyMissing = true;
+    } else if (flag == "missingmedia") {
+        config->missingMedia = true;
     } else if (flag == "pretend") {
         config->pretend = true;
     } else if (flag == "relative") {

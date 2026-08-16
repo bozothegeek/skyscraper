@@ -3,6 +3,9 @@
 This page summarizes the changes of each Skyscraper release, a [changlog for
 humans](https://keepachangelog.com).
 
+### Version 3.21.0 (2026-08-XX)
+- Added: `--flags missingMedia` to let scrap only missing media if requested
+
 ### Version 3.20.0 (2026-06-04)
 
 - Added: TheGamesDB does provide videos since a few weeks, thus scraping of

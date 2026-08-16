@@ -314,6 +314,7 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
 }
 
 void ScreenScraper::getGameData(GameEntry &game) { populateGameEntry(game); }
+void ScreenScraper::getMissingGameData(GameEntry &game, int media) { populateGameEntry(game); }
 
 void ScreenScraper::getReleaseDate(GameEntry &game) {
     game.releaseDate = getJsonText(jsonObj["dates"].toArray(), REGION);
