@@ -545,7 +545,7 @@ void ScraperWorker::run() {
             QString(
                 (config.cacheTextures || cacheScraper ? "" : " (uncached)")) +
             " (" + game.textureSrc + ")\n");
-        if (config.videos) {
+        if (config.videos || config.cacheVideos) {
             output.append(
                 "Video:          " +
                 QString((game.videoFormat.isEmpty() ? "\033[1;31mNO"
@@ -556,7 +556,7 @@ void ScraperWorker::run() {
                              : " (size exceeded, uncached)")) +
                 " (" + game.videoSrc + ")\n");
         }
-        if (config.manuals) {
+        if (config.manuals || config.cacheManuals) {
             output.append(
                 "Manual:         " +
                 QString((game.manualSrc.isEmpty() && game.manualData.isEmpty()
@@ -564,7 +564,7 @@ void ScraperWorker::run() {
                              : "\033[1;32mYES")) +
                 "\033[0m (" + game.manualSrc + ")\n");
         }
-        if (config.fanart) {
+        if (config.fanart || config.cacheFanarts) {
             output.append(
                 "Fanart:         " +
                 QString((game.fanartSrc.isEmpty() && game.fanartData.isEmpty()
@@ -572,7 +572,7 @@ void ScraperWorker::run() {
                              : "\033[1;32mYES")) +
                 "\033[0m (" + game.fanartSrc + ")\n");
         }
-        if (config.backcovers) {
+        if (config.backcovers || config.cacheBackcovers) {
             output.append("Backcover:      " +
                           QString((game.backcoverSrc.isEmpty() &&
                                            game.backcoverData.isEmpty()
@@ -590,8 +590,8 @@ void ScraperWorker::run() {
         if (!forceEnd) {
             forceEnd = limitReached(output);
         }
-        game.calculateCompleteness(config.videos, config.manuals, config.fanart,
-                                   config.backcovers);
+        game.calculateCompleteness(config.videos || config.cacheVideos, config.manuals || config.cacheManuals,
+                                   config.fanart || config.cacheFanarts, config.backcovers || config.cacheBackcovers);
         game.resetMedia();
         emit entryReady(game, output, debug);
         if (forceEnd) {
