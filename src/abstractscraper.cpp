@@ -131,52 +131,75 @@ void AbstractScraper::populateGameEntry(GameEntry &game, int media) {
                 getReleaseDate(game);
             break;
         case GameEntry::Elem::COVER:
-            if (config->cacheCovers) {
+            //for dev debug
+            ncprintf(" GameEntry::Elem::COVER");
+            if (config->cacheCovers && game.coverFile == "") {
                 getCover(game);
+                ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::SCREENSHOT:
-            if (config->cacheScreenshots) {
+            //for dev debug
+            ncprintf(" GameEntry::Elem::SCREENSHOT");
+            if (config->cacheScreenshots && game.screenshotFile == "") {
                 getScreenshot(game);
+                ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::WHEEL:
-            if (config->cacheWheels) {
+            //for dev debug
+            ncprintf(" GameEntry::Elem::WHEEL");
+            if (config->cacheWheels && game.wheelFile == "") {
                 getWheel(game);
+                ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::MARQUEE:
-            if (config->cacheMarquees) {
+            //for dev debug
+            ncprintf(" GameEntry::Elem::MARQUEE");
+            if (config->cacheMarquees && game.marqueeFile == "") {
                 getMarquee(game);
+                ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::TEXTURE:
-            if (config->cacheTextures) {
+            //for dev debug
+            ncprintf(" GameEntry::Elem::TEXTURE");
+            if (config->cacheTextures && game.textureFile == "") {
                 getTexture(game);
+                ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::VIDEO:
             //for dev debug
             ncprintf(" GameEntry::Elem::VIDEO");
-            if (config->videos) {
+            if ((config->cacheVideos || config->videos) && game.videoFile == "") {
                 getVideo(game);
+                ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::MANUAL:
             //for dev debug
             ncprintf(" GameEntry::Elem::MANUAL");
-            if (config->manuals) {
+            if ((config->cacheManuals || config->manuals) && game.manualFile == "") {
                 getManual(game);
+                ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::FANART:
-            if (config->fanart) {
+            //for dev debug
+            ncprintf(" GameEntry::Elem::FANART");
+            if ((config->cacheFanarts || config->fanart) && game.fanartFile == "") {
                 getFanart(game);
+                ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::BACKCOVER:
-            if (config->backcovers) {
+            //for dev debug
+            ncprintf(" GameEntry::Elem::BACKCOVER...");
+            if ((config->cacheBackcovers || config->backcovers) && game.backcoverFile == "") {
                 getBackcover(game);
+                ncprintf(" Get done");
             }
             break;
         default:;

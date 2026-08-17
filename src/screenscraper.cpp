@@ -317,7 +317,6 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
 }
 
 void ScreenScraper::getGameData(GameEntry &game, int media) {
-    ncprintf("void ScreenScraper::getGameData(GameEntry &game, int media) \n");
     populateGameEntry(game, media);
 }
 

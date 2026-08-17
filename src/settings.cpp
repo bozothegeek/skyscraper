@@ -454,6 +454,22 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->cacheWheels = v;
                 continue;
             }
+            if (k == "cacheManuals") {
+                config->cacheManuals = v;
+                continue;
+            }
+            if (k == "cacheFanarts") {
+                config->cacheFanarts = v;
+                continue;
+            }
+            if (k == "cacheBackcovers") {
+                config->cacheBackcovers = v;
+                continue;
+            }
+            if (k == "cacheVideos") {
+                config->cacheVideos = v;
+                continue;
+            }
             if (k == "cropBlack") {
                 config->cropBlack = v;
                 continue;

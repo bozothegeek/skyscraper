@@ -5,6 +5,8 @@ humans](https://keepachangelog.com).
 
 ### Version 3.21.0 (2026-08-XX)
 - Added: `--flags missingMedia` to let scrap only missing media if requested
+- Added: `cacheManuals, cacheFanarts, cacheBackcovers and cacheVideos ` to scrap more binary from configuration 
+  (set at "false" by default to keep usual behaviors)
 
 ### Version 3.20.0 (2026-06-04)
 

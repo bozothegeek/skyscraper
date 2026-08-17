@@ -134,6 +134,7 @@ struct Settings {
     QString videoConvertCommand = "";
     QString videoConvertExtension = "";
     bool symlink = false;
+    bool cacheVideos = false;
     bool skipExistingVideos = false;
     bool cacheCovers = true;
     bool skipExistingCovers = false;
@@ -145,10 +146,13 @@ struct Settings {
     bool skipExistingWheels = false;
     bool cacheMarquees = true;
     bool skipExistingMarquees = false;
-    bool skipExistingTextures = false;
     bool cacheTextures = true;
+    bool skipExistingTextures = false;
+    bool cacheManuals = false;
     bool skipExistingManuals = false;
+    bool cacheFanarts = false;
     bool skipExistingFanart = false;
+    bool cacheBackcovers = false;
     bool skipExistingBackcovers = false;
     bool miximages = false;
     bool stdErr = false; // for AbstractScraper slot
@@ -228,6 +232,10 @@ private:
         {"cacheScreenshots",        QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheTextures",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheWheels",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"cacheManuals",            QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"cacheFanarts",            QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"cacheBackcovers",         QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"cacheVideos",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cropBlack",               QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"emulator",                QPair<QString, int>("str",  CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND                    )},
         {"endAt",                   QPair<QString, int>("str",                  CfgType::PLATFORM | CfgType::FRONTEND                    )},
