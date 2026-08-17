@@ -495,9 +495,9 @@ void ScreenScraper::getVideo(GameEntry &game) {
     }
     types.append("video");
     QString url = getJsonText(jsonObj["medias"].toArray(), NONE, types);
-    ncprintf("getvideo url is: '%s'\n", url.toStdString().c_str());
+    //for dev debug
+    ncprintf("\n getvideo url is: '%s'", url.toStdString().c_str());
     if (!url.isEmpty()) {
-        ncprintf("downloadBinary(url, types.last(), game)\n");
         downloadBinary(url, types.last(), game);
     }
 }

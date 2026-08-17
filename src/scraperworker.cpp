@@ -146,6 +146,7 @@ void ScraperWorker::run() {
         QList<GameEntry> gameEntries;
 
         bool fromCache = false;
+        bool runPassed = false;
         if (cacheScraper && cache->hasEntries(cacheId)) {
             fromCache = true;
             GameEntry cachedGame;
@@ -203,11 +204,13 @@ void ScraperWorker::run() {
                        ((cachedGame.videoFile == "") && (config.cacheVideos  || config.videos)) ){
                             // need to scrap in this case also
                             scraper->runPasses(gameEntries, info, output, debug);
+                            runPassed = true;
                     }
                 }
             } else {
                 // divert into actual scraping
                 scraper->runPasses(gameEntries, info, output, debug);
+                runPassed = true;
             }
         }
 
@@ -336,7 +339,7 @@ void ScraperWorker::run() {
             QString("\033[1;34m---- Game '%1' found! :) ----\033[0m\n")
                 .arg(info.completeBaseName()));
 
-        if (!fromCache || config.missingMedia) {
+        if (runPassed) {
             scraper->getGameData(game);
         }
 
@@ -360,7 +363,7 @@ void ScraperWorker::run() {
 
         // Add all resources to the cache
         QString cacheOutput = "";
-        if (!cacheScraper && game.found && !fromCache) {
+        if (!cacheScraper && game.found && (!fromCache || config.missingMedia)) {
             game.source = config.scraper;
             cache->addResources(game, config, cacheOutput);
         }

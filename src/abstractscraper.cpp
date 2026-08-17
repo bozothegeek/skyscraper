@@ -101,7 +101,7 @@ void AbstractScraper::getTitle(GameEntry &) {}
 void AbstractScraper::populateGameEntry(GameEntry &game, int media) {
     auto processElement = [this, &game](int t) {
         //for dev debug
-        ncprintf("Populate Game Entry...");
+        //ncprintf("Populate Game Entry...");
         switch (t) {
         case GameEntry::Elem::TITLE:
                 getTitle(game);
@@ -132,80 +132,80 @@ void AbstractScraper::populateGameEntry(GameEntry &game, int media) {
             break;
         case GameEntry::Elem::COVER:
             //for dev debug
-            ncprintf(" GameEntry::Elem::COVER");
+            //ncprintf(" GameEntry::Elem::COVER");
             if (config->cacheCovers && game.coverFile == "") {
                 getCover(game);
-                ncprintf(" Get done");
+                //ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::SCREENSHOT:
             //for dev debug
-            ncprintf(" GameEntry::Elem::SCREENSHOT");
+            //ncprintf(" GameEntry::Elem::SCREENSHOT");
             if (config->cacheScreenshots && game.screenshotFile == "") {
                 getScreenshot(game);
-                ncprintf(" Get done");
+                //ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::WHEEL:
             //for dev debug
-            ncprintf(" GameEntry::Elem::WHEEL");
+            //ncprintf(" GameEntry::Elem::WHEEL");
             if (config->cacheWheels && game.wheelFile == "") {
                 getWheel(game);
-                ncprintf(" Get done");
+                //ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::MARQUEE:
             //for dev debug
-            ncprintf(" GameEntry::Elem::MARQUEE");
+            //ncprintf(" GameEntry::Elem::MARQUEE");
             if (config->cacheMarquees && game.marqueeFile == "") {
                 getMarquee(game);
-                ncprintf(" Get done");
+                //ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::TEXTURE:
             //for dev debug
-            ncprintf(" GameEntry::Elem::TEXTURE");
+            //ncprintf(" GameEntry::Elem::TEXTURE");
             if (config->cacheTextures && game.textureFile == "") {
                 getTexture(game);
-                ncprintf(" Get done");
+                //ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::VIDEO:
             //for dev debug
-            ncprintf(" GameEntry::Elem::VIDEO");
+            //ncprintf(" GameEntry::Elem::VIDEO");
             if ((config->cacheVideos || config->videos) && game.videoFile == "") {
                 getVideo(game);
-                ncprintf(" Get done");
+                //ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::MANUAL:
             //for dev debug
-            ncprintf(" GameEntry::Elem::MANUAL");
+            //ncprintf(" GameEntry::Elem::MANUAL");
             if ((config->cacheManuals || config->manuals) && game.manualFile == "") {
                 getManual(game);
-                ncprintf(" Get done");
+                //ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::FANART:
             //for dev debug
-            ncprintf(" GameEntry::Elem::FANART");
+            //ncprintf(" GameEntry::Elem::FANART");
             if ((config->cacheFanarts || config->fanart) && game.fanartFile == "") {
                 getFanart(game);
-                ncprintf(" Get done");
+                //ncprintf(" Get done");
             }
             break;
         case GameEntry::Elem::BACKCOVER:
             //for dev debug
-            ncprintf(" GameEntry::Elem::BACKCOVER...");
+            //ncprintf(" GameEntry::Elem::BACKCOVER");
             if ((config->cacheBackcovers || config->backcovers) && game.backcoverFile == "") {
                 getBackcover(game);
-                ncprintf(" Get done");
-            }
+                //ncprintf(" Get done");
+            }            
             break;
         default:;
         }
         //for dev debug
-        ncprintf("\n");
+        //ncprintf("\n");
     };
 
     if (media != -1) {
