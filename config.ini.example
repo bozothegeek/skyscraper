@@ -38,6 +38,7 @@
 ;jpgQuality="95"
 ;cacheCovers="true"
 ;cacheScreenshots="true"
+;cacheScreenshotTitles="false"
 ;cacheWheels="true"
 ;cacheMarquees="true"
 ;cacheTextures="true"

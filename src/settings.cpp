@@ -446,6 +446,10 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 config->cacheScreenshots = v;
                 continue;
             }
+            if (k == "cacheScreenshottitles") {
+                config->cacheScreenshottitles = v;
+                continue;
+            }
             if (k == "cacheTextures") {
                 config->cacheTextures = v;
                 continue;
@@ -931,6 +935,8 @@ void RuntimeCfg::setFlag(const QString flag) {
         config->skipExistingMarquees = true;
     } else if (flag == "skipexistingscreenshots") {
         config->skipExistingScreenshots = true;
+    } else if (flag == "skipexistingscreenshottitles") {
+        config->skipExistingScreenshotTitles = true;
     } else if (flag == "skipexistingvideos") {
         config->skipExistingVideos = true;
     } else if (flag == "skipexistingwheels") {

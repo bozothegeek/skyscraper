@@ -51,6 +51,7 @@ public:
     void getRating(GameEntry &game) override;
     void getReleaseDate(GameEntry &game) override;
     void getScreenshot(GameEntry &game) override;
+    void getScreenshotTitle(GameEntry &game) override;
     void getTags(GameEntry &game) override;
     void getTexture(GameEntry &game) override;
     void getTitle(GameEntry &game) override;
@@ -83,6 +84,7 @@ private:
     QList<QFileInfo> textual;
     QList<QFileInfo> covers;
     QList<QFileInfo> screenshots;
+    QList<QFileInfo> screenshottitles;
     QList<QFileInfo> wheels;
     QList<QFileInfo> marquees;
     QList<QFileInfo> textures;
@@ -94,6 +96,7 @@ private:
     QString textualFile = "";
     QString coverFile = "";
     QString screenshotFile = "";
+    QString screenshottitleFile = "";
     QString wheelFile = "";
     QString marqueeFile = "";
     QString textureFile = "";

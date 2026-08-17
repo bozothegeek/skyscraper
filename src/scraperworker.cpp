@@ -192,9 +192,12 @@ void ScraperWorker::run() {
                 // need "--flags missingmedia" with cache activated
                 // or media flags for some media as "video,manual,fanart and backcover"
                 if (config.missingMedia) {
+                    ncprintf("config.cacheScreenshottitles : %b\n",
+                             config.cacheScreenshottitles);
                     // binary data
                     if (((cachedGame.coverFile == "") && config.cacheCovers) ||
                        ((cachedGame.screenshotFile == "") && config.cacheScreenshots) ||
+                       ((cachedGame.screenshottitleFile == "") && config.cacheScreenshottitles) ||
                        ((cachedGame.wheelFile == "") && config.cacheWheels) ||
                        ((cachedGame.marqueeFile == "") && config.cacheMarquees) ||
                        ((cachedGame.textureFile == "") && config.cacheTextures) ||
@@ -516,6 +519,18 @@ void ScraperWorker::run() {
             QString((config.cacheScreenshots || cacheScraper ? ""
                                                              : " (uncached)")) +
             " (" + game.screenshotSrc + ")\n");
+        if (config.cacheScreenshottitles) {
+            output.append(
+                "ScreenshotTitle:     " +
+                QString(
+                    (game.screenshottitleSrc.isEmpty() && game.screenshottitleData.isNull()
+                         ? "\033[1;31mNO"
+                         : "\033[1;32mYES")) +
+                "\033[0m" +
+                QString((config.cacheScreenshottitles || cacheScraper ? ""
+                                                                 : " (uncached)")) +
+                " (" + game.screenshottitleSrc + ")\n");
+        }
         // use wheelSrc here as wheel might be processed/used in marquee during
         // gl creation avoid signaling NO to the user. wheeldata is set when
         // found in scraping mode.

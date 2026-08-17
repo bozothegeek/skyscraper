@@ -1405,6 +1405,7 @@ void Cache::printStats(bool totals) {
         resTotals["ReleaseDates"] += it.value().releaseDates;
         resTotals["Covers"] += it.value().covers;
         resTotals["Screenshots"] += it.value().screenshots;
+        resTotals["Screenshottitles"] += it.value().screenshottitles;
         resTotals["Wheels"] += it.value().wheels;
         resTotals["Marquees"] += it.value().marquees;
         resTotals["Textures"] += it.value().textures;
@@ -1753,6 +1754,7 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
     const QMap<QString, bool> binResources = {
         {"cover", !entry.coverData.isEmpty()},
         {"screenshot", !entry.screenshotData.isEmpty()},
+        {"screenshottitle", !entry.screenshottitleData.isEmpty()},
         {"wheel", !entry.wheelData.isEmpty()},
         {"marquee", !entry.marqueeData.isEmpty()},
         {"texture", !entry.textureData.isEmpty()},
@@ -1802,6 +1804,8 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                 imageData = &entry.coverData;
             } else if (resource.type == "screenshot") {
                 imageData = &entry.screenshotData;
+            } else if (resource.type == "screenshottitle") {
+                imageData = &entry.screenshottitleData;
             } else if (resource.type == "wheel") {
                 imageData = &entry.wheelData;
             } else if (resource.type == "marquee") {
@@ -2129,6 +2133,10 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
                 entry.screenshotData = data;
                 entry.screenshotSrc = source;
                 entry.screenshotFile = info.absoluteFilePath();
+            } else if (type == "screenshottitle") {
+                entry.screenshottitleData = data;
+                entry.screenshottitleSrc = source;
+                entry.screenshottitleFile = info.absoluteFilePath();
             } else if (type == "wheel") {
                 entry.wheelData = data;
                 entry.wheelSrc = source;

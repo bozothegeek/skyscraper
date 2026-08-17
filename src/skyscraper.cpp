@@ -121,17 +121,21 @@ void Skyscraper::run() {
     ncprintf("Game list folder: '\033[1;32m%s\033[0m'\n",
              PathTools::pathToStdStr(config.gameListFolder).c_str());
     if (cacheScrapeMode && config.cacheOptions.isEmpty()) {
-        ncprintf("Media folder:     '\033[1;32m%s\033[0m'\n",
+            ncprintf("Media folder:      '\033[1;32m%s\033[0m'\n",
                  PathTools::pathToStdStr(config.mediaFolder).c_str());
-        ncprintf("  Covers folder:  '├── \033[1;32m%s\033[0m'\n",
+            ncprintf("  Covers folder:   '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.coversFolder).c_str());
-        ncprintf("  Screenshots:    '├── \033[1;32m%s\033[0m'\n",
+            ncprintf("  Screenshots:     '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.screenshotsFolder).c_str());
-        ncprintf("  Wheels:         '├── \033[1;32m%s\033[0m'\n",
+        if (config.cacheScreenshottitles) {
+            ncprintf("  ScreenshotTitles:'├── \033[1;32m%s\033[0m'\n",
+                 mediaSubFolderStdStr(config.screenshottitlesFolder).c_str());
+        }
+            ncprintf("  Wheels:          '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.wheelsFolder).c_str());
         bool notLast = config.videos || config.manuals || config.backcovers ||
                        config.fanart;
-        ncprintf("  Marquees:       '%s── \033[1;32m%s\033[0m'\n",
+            ncprintf("  Marquees:        '%s── \033[1;32m%s\033[0m'\n",
                  notLast || !config.texturesFolder.isEmpty() ? "├" : "└",
                  mediaSubFolderStdStr(config.marqueesFolder).c_str());
         if (!config.texturesFolder.isEmpty()) {
@@ -139,26 +143,26 @@ void Skyscraper::run() {
                      notLast ? "├" : "└",
                      mediaSubFolderStdStr(config.texturesFolder).c_str());
         }
-        if (config.videos) {
-            notLast = config.manuals || config.backcovers || config.fanart;
+        if ((config.videos || config.cacheVideos) && !config.videosFolder.isEmpty()) {
+            notLast = (config.manuals || config.cacheManuals) || (config.backcovers || config.cacheBackcovers) || (config.fanart || config.cacheFanarts);
             ncprintf("  Videos:         '%s── \033[1;32m%s\033[0m'\n",
                      notLast ? "├" : "└",
                      mediaSubFolderStdStr(config.videosFolder).c_str());
         }
         // config.*Folder are not empty on frontends supporting that media
-        if (config.manuals && !config.manualsFolder.isEmpty()) {
-            notLast = config.backcovers || config.fanart;
+        if ((config.manuals || config.cacheManuals) && !config.manualsFolder.isEmpty()) {
+            notLast = (config.backcovers || config.cacheBackcovers) || (config.fanart || config.cacheFanarts);
             ncprintf("  Manuals:        '%s── \033[1;32m%s\033[0m'\n",
                      notLast ? "├" : "└",
                      mediaSubFolderStdStr(config.manualsFolder).c_str());
         }
-        if (config.fanart && !config.fanartsFolder.isEmpty()) {
-            notLast = config.backcovers;
+        if ((config.fanart || config.cacheFanarts) && !config.fanartsFolder.isEmpty()) {
+            notLast = config.backcovers || config.cacheBackcovers;
             ncprintf("  Fanarts:        '%s── \033[1;32m%s\033[0m'\n",
                      notLast ? "├" : "└",
                      mediaSubFolderStdStr(config.fanartsFolder).c_str());
         }
-        if (config.backcovers && !config.backcoversFolder.isEmpty()) {
+        if ((config.backcovers || config.cacheBackcovers) && !config.backcoversFolder.isEmpty()) {
             notLast = false;
             ncprintf("  Backcovers:     '%s── \033[1;32m%s\033[0m'\n",
                      notLast ? "├" : "└",
@@ -645,19 +649,22 @@ void Skyscraper::createMediaOutFolders() {
     // make and check iff gamelist is outputted
     setFolder(generateGamelist, config.coversFolder, generateGamelist);
     setFolder(generateGamelist, config.screenshotsFolder, generateGamelist);
+    if (config.cacheScreenshottitles) {
+        setFolder(generateGamelist, config.screenshottitlesFolder, generateGamelist);
+    }
     setFolder(generateGamelist, config.wheelsFolder, generateGamelist);
     setFolder(generateGamelist, config.marqueesFolder, generateGamelist);
     setFolder(generateGamelist, config.texturesFolder, generateGamelist);
-    if (config.videos) {
+    if (config.videos || config.cacheVideos) {
         setFolder(generateGamelist, config.videosFolder, generateGamelist);
     }
-    if (config.manuals) {
+    if (config.manuals || config.cacheManuals) {
         setFolder(generateGamelist, config.manualsFolder, generateGamelist);
     }
-    if (config.fanart) {
+    if (config.fanart || config.cacheFanarts) {
         setFolder(generateGamelist, config.fanartsFolder, generateGamelist);
     }
-    if (config.backcovers) {
+    if (config.backcovers || config.cacheBackcovers) {
         setFolder(generateGamelist, config.backcoversFolder, generateGamelist);
     }
 }
@@ -1132,6 +1139,7 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     // only resolve after config.mediaFolder is set
     config.coversFolder = frontend->getCoversFolder();
     config.screenshotsFolder = frontend->getScreenshotsFolder();
+    config.screenshottitlesFolder = frontend->getScreenshottitlesFolder();
     config.wheelsFolder = frontend->getWheelsFolder();
     config.marqueesFolder = frontend->getMarqueesFolder();
     config.texturesFolder = frontend->getTexturesFolder();
@@ -1728,7 +1736,7 @@ QString &Skyscraper::removeSurplusPlatformPath(const QString &platform,
 }
 
 void Skyscraper::cleanUp() {
-    QStringList mediaDirs = {config.coversFolder,    config.screenshotsFolder,
+    QStringList mediaDirs = {config.coversFolder,    config.screenshotsFolder, config.screenshottitlesFolder,
                              config.wheelsFolder,    config.marqueesFolder,
                              config.texturesFolder,  config.videosFolder,
                              config.manualsFolder,   config.fanartsFolder,

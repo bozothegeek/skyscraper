@@ -62,6 +62,9 @@ void GameEntry::calculateCompleteness(bool videoEnabled, bool manualEnabled,
     if (screenshotData.isNull() && screenshotSrc.isEmpty()) {
         completeness -= valuePerType;
     }
+    if (screenshottitleData.isNull() && screenshottitleSrc.isEmpty()) {
+        completeness -= valuePerType;
+    }
     if (wheelData.isNull() && wheelSrc.isEmpty()) {
         completeness -= valuePerType;
     }
@@ -111,6 +114,7 @@ int GameEntry::getCompleteness() const { return (int)completeness; }
 void GameEntry::resetMedia() {
     coverData.clear();
     screenshotData.clear();
+    screenshottitleData.clear();
     wheelData.clear();
     marqueeData.clear();
     textureData.clear();

@@ -165,7 +165,7 @@ void Config::setupUserConfig() {
     QDir::setCurrent(skyDir.absolutePath());
 
     // Create import paths
-    QStringList paths = {"covers",  "manuals",  "marquees", "screenshots",
+    QStringList paths = {"covers",  "manuals",  "marquees", "screenshots", "screenshottitles",
                          "textual", "textures", "videos",   "wheels"};
     for (auto p : paths) {
         QDir(getSkyFolder(SkyFolderType::IMPORT) % "/" % p).mkpath(".");

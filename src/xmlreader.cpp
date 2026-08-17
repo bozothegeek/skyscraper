@@ -103,6 +103,10 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
             inputFolder, node.firstChildElement(
                                  GameEntry::getTag(GameEntry::Elem::SCREENSHOT))
                              .text());
+        entry.screenshottitleFile = PathTools::makeAbsolutePath(
+            inputFolder, node.firstChildElement(
+                                 GameEntry::getTag(GameEntry::Elem::SCREENSHOTTITLE))
+                             .text());
         entry.marqueeFile = PathTools::makeAbsolutePath(
             inputFolder,
             node.firstChildElement(GameEntry::getTag(GameEntry::Elem::MARQUEE))

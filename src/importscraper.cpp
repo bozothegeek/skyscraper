@@ -60,6 +60,9 @@ ImportScraper::ImportScraper(Settings *config,
     d.setPath(config->importFolder + "/screenshots");
     screenshots = d.entryInfoList();
 
+    d.setPath(config->importFolder + "/screenshottitles");
+    screenshottitles = d.entryInfoList();
+
     d.setPath(config->importFolder + "/wheels");
     wheels = d.entryInfoList();
 
@@ -99,6 +102,7 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     data = "";
     textualFile = "";
     screenshotFile = "";
+    screenshottitleFile = "";
     coverFile = "";
     wheelFile = "";
     marqueeFile = "";
@@ -109,6 +113,7 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     GameEntry game;
     bool any = checkType(info.completeBaseName(), textual, textualFile);
     any |= checkType(info.completeBaseName(), screenshots, screenshotFile);
+    any |= checkType(info.completeBaseName(), screenshottitles, screenshottitleFile);
     any |= checkType(info.completeBaseName(), covers, coverFile);
     any |= checkType(info.completeBaseName(), wheels, wheelFile);
     any |= checkType(info.completeBaseName(), marquees, marqueeFile);
@@ -146,6 +151,10 @@ void ImportScraper::getCover(GameEntry &game) {
 
 void ImportScraper::getScreenshot(GameEntry &game) {
     game.screenshotData = readFile(screenshotFile);
+}
+
+void ImportScraper::getScreenshotTitle(GameEntry &game) {
+    game.screenshottitleData = readFile(screenshottitleFile);
 }
 
 void ImportScraper::getWheel(GameEntry &game) {

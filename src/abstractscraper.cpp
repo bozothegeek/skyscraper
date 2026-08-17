@@ -146,6 +146,14 @@ void AbstractScraper::populateGameEntry(GameEntry &game, int media) {
                 //ncprintf(" Get done");
             }
             break;
+        case GameEntry::Elem::SCREENSHOTTITLE:
+            //for dev debug
+            //ncprintf(" GameEntry::Elem::SCREENSHOTTITLE");
+            if (config->cacheScreenshottitles && game.screenshottitleFile == "") {
+                getScreenshotTitle(game);
+                //ncprintf(" Get done");
+            }
+            break;
         case GameEntry::Elem::WHEEL:
             //for dev debug
             //ncprintf(" GameEntry::Elem::WHEEL");
@@ -398,6 +406,28 @@ void AbstractScraper::getScreenshot(GameEntry &game) {
                                   (screenshotUrl.left(1) == "/" ? "" : "/"));
         }
         game.screenshotData = downloadMedia(screenshotUrl);
+    }
+}
+
+void AbstractScraper::getScreenshotTitle(GameEntry &game) {
+    if (screenshottitlePre.isEmpty()) {
+        return;
+    }
+    // Check that we have enough screenshottitles
+    int screens = data.count(screenshottitleCounter.toUtf8());
+    if (screens >= 1) {
+        for (int a = 0; a < screens - (screens / 2); a++) {
+            for (const auto &nom : screenshottitlePre) {
+                nomNom(nom);
+            }
+        }
+        QString screenshottitleUrl = data.left(data.indexOf(screenshottitlePost.toUtf8()))
+                                    .replace("&amp;", "&");
+        if (screenshottitleUrl.left(4) != "http") {
+            screenshottitleUrl.prepend(baseUrl +
+                                  (screenshottitleUrl.left(1) == "/" ? "" : "/"));
+        }
+        game.screenshottitleData = downloadMedia(screenshottitleUrl);
     }
 }
 

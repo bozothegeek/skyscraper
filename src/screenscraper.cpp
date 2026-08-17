@@ -74,6 +74,7 @@ ScreenScraper::ScreenScraper(Settings *config,
     fetchOrder.append(GameEntry::Elem::RELEASEDATE);
     fetchOrder.append(GameEntry::Elem::TAGS);
     fetchOrder.append(GameEntry::Elem::SCREENSHOT);
+    fetchOrder.append(GameEntry::Elem::SCREENSHOTTITLE);
     fetchOrder.append(GameEntry::Elem::COVER);
     fetchOrder.append(GameEntry::Elem::WHEEL);
     fetchOrder.append(GameEntry::Elem::MARQUEE);
@@ -107,8 +108,8 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         (platformId == -1 ? "" : "&systemeid=" + QString::number(platformId)) +
         "&output=json&" + searchName;
 
-    ncprintf("Screenscraper Game Info URL: %s \n",
-             gameUrl.toStdString().c_str());
+    //ncprintf("Screenscraper Game Info URL: %s \n",
+    //         gameUrl.toStdString().c_str());
 
     tctr = 0;
     statusTimer.start(1000);
@@ -469,6 +470,12 @@ void ScreenScraper::getScreenshot(GameEntry &game) {
     game.screenshotData = downloadImageWithRetry(url);
 }
 
+void ScreenScraper::getScreenshotTitle(GameEntry &game) {
+    QString url = getJsonText(jsonObj["medias"].toArray(), REGION,
+                              QList<QString>({"sstitle"}));
+    game.screenshotData = downloadImageWithRetry(url);
+}
+
 void ScreenScraper::getWheel(GameEntry &game) {
     QString url = getJsonText(jsonObj["medias"].toArray(), REGION,
                               QList<QString>({"wheel(-hd)?"}));
@@ -496,7 +503,7 @@ void ScreenScraper::getVideo(GameEntry &game) {
     types.append("video");
     QString url = getJsonText(jsonObj["medias"].toArray(), NONE, types);
     //for dev debug
-    ncprintf("\n getvideo url is: '%s'", url.toStdString().c_str());
+    //ncprintf("\n getvideo url is: '%s'", url.toStdString().c_str());
     if (!url.isEmpty()) {
         downloadBinary(url, types.last(), game);
     }

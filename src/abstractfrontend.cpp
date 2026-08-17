@@ -95,6 +95,9 @@ QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,
     case GameEntry::SCREENSHOT:
         fp = getScreenshotsFolder();
         break;
+    case GameEntry::SCREENSHOTTITLE:
+        fp = getScreenshottitlesFolder();
+        break;
     case GameEntry::TEXTURE:
         fp = getTexturesFolder();
         break;
@@ -235,6 +238,12 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
                        game.screenshotFile, config->skipExistingScreenshots);
         medias.append(m);
     }
+    if (GameEntry::SCREENSHOTTITLE & toCopy) {
+        MediaProps m =
+            MediaProps(GameEntry::SCREENSHOTTITLE, game.screenshottitleData,
+                       game.screenshottitleFile, config->skipExistingScreenshotTitles);
+        medias.append(m);
+    }
     if (GameEntry::TEXTURE & toCopy) {
         MediaProps m =
             MediaProps(GameEntry::TEXTURE, game.textureData, game.textureFile,
@@ -284,6 +293,8 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
     if (drop & GameEntry::MARQUEE)
         game.marqueeFile.clear();
     if (drop & GameEntry::SCREENSHOT)
+        game.screenshotFile.clear();
+    if (drop & GameEntry::SCREENSHOTTITLE)
         game.screenshotFile.clear();
     if (drop & GameEntry::TEXTURE)
         game.textureFile.clear();

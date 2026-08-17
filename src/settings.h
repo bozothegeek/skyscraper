@@ -62,6 +62,7 @@ struct Settings {
     bool mediaFolderHidden = false; // EmulationStation only
     bool addFolders = false;        // EmulationStation and ES-DE
     QString screenshotsFolder = "";
+    QString screenshottitlesFolder = "";
     QString coversFolder = "";
     QString wheelsFolder = "";
     QString marqueesFolder = "";
@@ -140,6 +141,8 @@ struct Settings {
     bool skipExistingCovers = false;
     bool cacheScreenshots = true;
     bool skipExistingScreenshots = false;
+    bool cacheScreenshottitles = false;
+    bool skipExistingScreenshotTitles = false;
     // If true, will crop away black borders around screenshots
     bool cropBlack = true;
     bool cacheWheels = true;
@@ -230,6 +233,7 @@ private:
         {"cacheRefresh",            QPair<QString, int>("bool", CfgType::MAIN |                                         CfgType::SCRAPER )},
         {"cacheResize",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheScreenshots",        QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"cacheScreenshottitles",   QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheTextures",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheWheels",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheManuals",            QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},

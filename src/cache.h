@@ -61,6 +61,7 @@ struct ResCounts {
     int releaseDates;
     int covers;
     int screenshots;
+    int screenshottitles;
     int wheels;
     int marquees;
     int textures;

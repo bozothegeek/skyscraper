@@ -463,6 +463,9 @@ QMap<QString, QString> Cli::getSubCommandOpts(const QString subCmd) {
             {"skipexistingscreenshots",
              "When generating gamelists, skip processing screenshots that "
              "already exist in the media output folder."},
+            {"skipexistingscreenshottitles",
+             "When generating gamelists, skip processing screenshottitles that "
+             "already exist in the media output folder."},
             {"skipexistingtextures",
              "When generating gamelists, skip processing textures, covers, "
              "disc art that already exist in the media output folder."},

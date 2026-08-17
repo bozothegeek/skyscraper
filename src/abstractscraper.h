@@ -86,6 +86,7 @@ protected:
     virtual void getReleaseDate(GameEntry &game);
     virtual void getCover(GameEntry &game);
     virtual void getScreenshot(GameEntry &game);
+    virtual void getScreenshotTitle(GameEntry &game);
     virtual void getWheel(GameEntry &game);
     virtual void getMarquee(GameEntry &game);
     virtual void getTexture(GameEntry &game);
@@ -148,6 +149,9 @@ protected:
     QList<QString> screenshotPre;
     QString screenshotPost;
     QString screenshotCounter;
+    QList<QString> screenshottitlePre;
+    QString screenshottitlePost;
+    QString screenshottitleCounter;
     QList<QString> wheelPre;
     QString wheelPost;
     QList<QString> marqueePre;

@@ -333,6 +333,12 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
                 game.screenshotFile = filename;
                 continue;
             }
+        } else if (output.resType == "screenshottitle") {
+            filename.prepend(config->screenshottitlesFolder);
+            if (config->skipExistingScreenshotTitles && QFileInfo::exists(filename)) {
+                game.screenshottitleFile = filename;
+                continue;
+            }
         } else if (output.resType == "wheel") {
             filename.prepend(config->wheelsFolder);
             if (config->skipExistingWheels && QFileInfo::exists(filename)) {
@@ -405,6 +411,9 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
                 // thus it will be copied by copyMedia()
                 if (!esdeMiximage)
                     artworkBins |= GameEntry::Elem::SCREENSHOT;
+            } else if (output.resType == "screenshottitle") {
+                game.screenshottitleFile = filename;
+                artworkBins |= GameEntry::Elem::SCREENSHOTTITLE;
             } else if (output.resType == "wheel") {
                 game.wheelFile = filename;
                 artworkBins |= GameEntry::Elem::WHEEL;
