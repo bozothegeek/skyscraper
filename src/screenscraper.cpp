@@ -108,8 +108,8 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         (platformId == -1 ? "" : "&systemeid=" + QString::number(platformId)) +
         "&output=json&" + searchName;
 
-    //ncprintf("Screenscraper Game Info URL: %s \n",
-    //         gameUrl.toStdString().c_str());
+    ncprintf("Screenscraper Game Info URL: %s \n",
+             gameUrl.toStdString().c_str());
 
     tctr = 0;
     statusTimer.start(1000);
