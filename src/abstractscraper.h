@@ -87,6 +87,9 @@ protected:
     virtual void getCover(GameEntry &game);
     virtual void getScreenshot(GameEntry &game);
     virtual void getScreenshotTitle(GameEntry &game);
+    virtual void getthreedcover(GameEntry &game);
+    virtual void getFullcover(GameEntry &game);
+    virtual void getMap(GameEntry &game);
     virtual void getWheel(GameEntry &game);
     virtual void getMarquee(GameEntry &game);
     virtual void getTexture(GameEntry &game);
@@ -152,6 +155,15 @@ protected:
     QList<QString> screenshottitlePre;
     QString screenshottitlePost;
     QString screenshottitleCounter;
+    QList<QString> threedcoverPre;
+    QString threedcoverPost;
+    QString threedcoverCounter;
+    QList<QString> fullcoverPre;
+    QString fullcoverPost;
+    QString fullcoverCounter;
+    QList<QString> mapPre;
+    QString mapPost;
+    QString mapCounter;
     QList<QString> wheelPre;
     QString wheelPost;
     QList<QString> marqueePre;

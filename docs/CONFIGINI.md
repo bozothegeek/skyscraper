@@ -81,6 +81,10 @@ This is an alphabetical index of all configuration options their usage level and
 | [cacheRefresh](CONFIGINI.md#cacherefresh)                   | Basic          |    Y     |                |                |       Y       |
 | [cacheResize](CONFIGINI.md#cacheresize)                     | Basic          |    Y     |       Y        |                |       Y       |
 | [cacheScreenshots](CONFIGINI.md#cachescreenshots)           | Basic          |    Y     |       Y        |                |       Y       |
+| [cacheScreenshottitles](CONFIGINI.md#cachescreenshottitles) | Basic          |    Y     |       Y        |                |       Y       |
+| [cache3dcovers](CONFIGINI.md#cache3dcovers)                 | Basic          |    Y     |       Y        |                |       Y       |
+| [cacheFullcovers](CONFIGINI.md#cachefullcovers)             | Basic          |    Y     |       Y        |                |       Y       |
+| [cacheMaps](CONFIGINI.md#cachemaps)                         | Basic          |    Y     |       Y        |                |       Y       |
 | [cacheTextures](CONFIGINI.md#cachetextures)                 | Basic          |    Y     |       Y        |                |       Y       |
 | [cacheWheels](CONFIGINI.md#cachewheels)                     | Basic          |    Y     |       Y        |                |       Y       |
 | [cropBlack](CONFIGINI.md#cropblack)                         | Basic          |    Y     |       Y        |       Y        |               |
@@ -376,6 +380,42 @@ Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
 Enables/disables the caching of the resource type `screenshot` when scraping with any module. If you never use screenshots in your artwork configuration, setting this to `"false"` can save you some space.
 
 Default value: `true`  
+Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
+
+---
+
+#### cacheScreenshottitles
+
+Enables/disables the caching of the resource type `screenshot title` when scraping with any module.
+
+Default value: `false`  
+Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
+
+---
+
+#### cache3dcovers
+
+Enables/disables the caching of the resource type `box 3d` when scraping with any module.
+
+Default value: `false`  
+Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
+
+---
+
+#### cacheFullcovers
+
+Enables/disables the caching of the resource type `box texture` when scraping with any module.
+
+Default value: `false`  
+Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
+
+---
+
+#### cacheMaps
+
+Enables/disables the caching of the resource type `map` when scraping with any module.
+
+Default value: `false`  
 Allowed in sections: `[main]`, `[<PLATFORM>]`, `[<SCRAPER>]`
 
 ---

@@ -131,6 +131,19 @@ void Skyscraper::run() {
             ncprintf("  ScreenshotTitles:'├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.screenshottitlesFolder).c_str());
         }
+        if (config.cache3dcovers) {
+            ncprintf("  3DCovers:'        ├── \033[1;32m%s\033[0m'\n",
+                 mediaSubFolderStdStr(config.threedcoversFolder).c_str());
+        }
+        if (config.cacheFullcovers) {
+            ncprintf("  Fullcovers:'      ├── \033[1;32m%s\033[0m'\n",
+                 mediaSubFolderStdStr(config.fullcoversFolder).c_str());
+        }
+        if (config.cacheMaps) {
+            ncprintf("  Maps:'            ├── \033[1;32m%s\033[0m'\n",
+                 mediaSubFolderStdStr(config.mapsFolder).c_str());
+        }
+
             ncprintf("  Wheels:          '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.wheelsFolder).c_str());
         bool notLast = config.videos || config.manuals || config.backcovers ||
@@ -652,6 +665,15 @@ void Skyscraper::createMediaOutFolders() {
     if (config.cacheScreenshottitles) {
         setFolder(generateGamelist, config.screenshottitlesFolder, generateGamelist);
     }
+    if (config.cache3dcovers) {
+        setFolder(generateGamelist, config.threedcoversFolder, generateGamelist);
+    }
+    if (config.cacheFullcovers) {
+        setFolder(generateGamelist, config.fullcoversFolder, generateGamelist);
+    }
+    if (config.cacheMaps) {
+        setFolder(generateGamelist, config.mapsFolder, generateGamelist);
+    }
     setFolder(generateGamelist, config.wheelsFolder, generateGamelist);
     setFolder(generateGamelist, config.marqueesFolder, generateGamelist);
     setFolder(generateGamelist, config.texturesFolder, generateGamelist);
@@ -1140,6 +1162,9 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     config.coversFolder = frontend->getCoversFolder();
     config.screenshotsFolder = frontend->getScreenshotsFolder();
     config.screenshottitlesFolder = frontend->getScreenshottitlesFolder();
+    config.threedcoversFolder = frontend->get3dcoversFolder();
+    config.fullcoversFolder = frontend->getFullcoversFolder();
+    config.mapsFolder = frontend->getMapsFolder();
     config.wheelsFolder = frontend->getWheelsFolder();
     config.marqueesFolder = frontend->getMarqueesFolder();
     config.texturesFolder = frontend->getTexturesFolder();
@@ -1737,6 +1762,7 @@ QString &Skyscraper::removeSurplusPlatformPath(const QString &platform,
 
 void Skyscraper::cleanUp() {
     QStringList mediaDirs = {config.coversFolder,    config.screenshotsFolder, config.screenshottitlesFolder,
+                             config.threedcoversFolder,    config.fullcoversFolder, config.mapsFolder,
                              config.wheelsFolder,    config.marqueesFolder,
                              config.texturesFolder,  config.videosFolder,
                              config.manualsFolder,   config.fanartsFolder,

@@ -98,7 +98,7 @@ static inline QStringList txtTypes(bool useGenres = true) {
 
 static inline QStringList binTypes(Excludes bins = Excludes::NONE) {
     // keep order for cache edit menu
-    QStringList binTypes = {"cover", "screenshot", "wheel", "marquee",
+    QStringList binTypes = {"cover", "screenshot", "screenshottitle", "3dcover", "fullcover", "map", "wheel", "marquee",
                             "texture"};
     if (Excludes::VIDEO != (bins & Excludes::VIDEO)) {
         binTypes.append("video");
@@ -319,6 +319,8 @@ void Cache::printPriorities(QString cacheId) {
 
     const QList<QPair<QString, QString>> prioBinRes = {
         {"Cover", game.coverSrc},        {"Screenshot", game.screenshotSrc},
+        {"Screenshottitle", game.screenshottitleSrc}, {"3dcover", game.threedcoverSrc},
+        {"Fullcover", game.fullcoverSrc}, {"3dcover", game.mapSrc},
         {"Wheel", game.wheelSrc},        {"Marquee", game.marqueeSrc},
         {"Texture", game.textureSrc},    {"Video", game.videoSrc},
         {"Manual", game.manualSrc},      {"Fanart", game.fanartSrc},
@@ -1385,6 +1387,7 @@ void Cache::printStats(bool totals) {
         {"Publishers", 0},   {"Developers", 0}, {"Players", 0},
         {"Ages", 0},         {"Tags", 0},       {"Ratings", 0},
         {"ReleaseDates", 0}, {"Covers", 0},     {"Screenshots", 0},
+        {"Screenshottitles", 0}, {"3dcovers", 0}, {"Fullcovers", 0}, {"Map", 0},
         {"Wheels", 0},       {"Marquees", 0},   {"Textures", 0},
         {"Videos", 0},       {"Manuals", 0},    {"Fanarts", 0},
         {"Backcovers", 0}};
@@ -1406,6 +1409,9 @@ void Cache::printStats(bool totals) {
         resTotals["Covers"] += it.value().covers;
         resTotals["Screenshots"] += it.value().screenshots;
         resTotals["Screenshottitles"] += it.value().screenshottitles;
+        resTotals["3dcovers"] += it.value().threedcovers;
+        resTotals["Fullcovers"] += it.value().fullcovers;
+        resTotals["Maps"] += it.value().maps;
         resTotals["Wheels"] += it.value().wheels;
         resTotals["Marquees"] += it.value().marquees;
         resTotals["Textures"] += it.value().textures;
@@ -1755,6 +1761,9 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
         {"cover", !entry.coverData.isEmpty()},
         {"screenshot", !entry.screenshotData.isEmpty()},
         {"screenshottitle", !entry.screenshottitleData.isEmpty()},
+        {"3dcover", !entry.threedcoverData.isEmpty()},
+        {"fullcover", !entry.fullcoverData.isEmpty()},
+        {"map", !entry.mapData.isEmpty()},
         {"wheel", !entry.wheelData.isEmpty()},
         {"marquee", !entry.marqueeData.isEmpty()},
         {"texture", !entry.textureData.isEmpty()},
@@ -1806,6 +1815,12 @@ void Cache::addResource(Resource &resource, GameEntry &entry,
                 imageData = &entry.screenshotData;
             } else if (resource.type == "screenshottitle") {
                 imageData = &entry.screenshottitleData;
+            } else if (resource.type == "3dcover") {
+                imageData = &entry.threedcoverData;
+            } else if (resource.type == "fullcover") {
+                imageData = &entry.fullcoverData;
+            } else if (resource.type == "map") {
+                imageData = &entry.mapData;
             } else if (resource.type == "wheel") {
                 imageData = &entry.wheelData;
             } else if (resource.type == "marquee") {
@@ -2137,6 +2152,18 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
                 entry.screenshottitleData = data;
                 entry.screenshottitleSrc = source;
                 entry.screenshottitleFile = info.absoluteFilePath();
+            } else if (type == "3dcover") {
+                entry.threedcoverData = data;
+                entry.threedcoverSrc = source;
+                entry.threedcoverFile = info.absoluteFilePath();
+            } else if (type == "fullcover") {
+                entry.fullcoverData = data;
+                entry.fullcoverSrc = source;
+                entry.fullcoverFile = info.absoluteFilePath();
+            } else if (type == "map") {
+                entry.mapData = data;
+                entry.mapSrc = source;
+                entry.mapFile = info.absoluteFilePath();
             } else if (type == "wheel") {
                 entry.wheelData = data;
                 entry.wheelSrc = source;

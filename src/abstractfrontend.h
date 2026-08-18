@@ -67,6 +67,9 @@ public:
     virtual QString getCoversFolder() { return QString(); };
     virtual QString getScreenshotsFolder() { return QString(); };
     virtual QString getScreenshottitlesFolder() { return QString(); };
+    virtual QString get3dcoversFolder() { return QString(); };
+    virtual QString getFullcoversFolder() { return QString(); };
+    virtual QString getMapsFolder() { return QString(); };
     virtual QString getWheelsFolder() { return QString(); };
     virtual QString getMarqueesFolder() { return QString(); };
     virtual QString getTexturesFolder() { return QString(); };

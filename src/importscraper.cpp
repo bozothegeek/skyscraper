@@ -63,6 +63,15 @@ ImportScraper::ImportScraper(Settings *config,
     d.setPath(config->importFolder + "/screenshottitles");
     screenshottitles = d.entryInfoList();
 
+    d.setPath(config->importFolder + "/3dcovers");
+    threedcovers = d.entryInfoList();
+
+    d.setPath(config->importFolder + "/fullcovers");
+    fullcovers = d.entryInfoList();
+
+    d.setPath(config->importFolder + "/maps");
+    maps = d.entryInfoList();
+
     d.setPath(config->importFolder + "/wheels");
     wheels = d.entryInfoList();
 
@@ -103,6 +112,9 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     textualFile = "";
     screenshotFile = "";
     screenshottitleFile = "";
+    threedcoverFile = "";
+    fullcoverFile = "";
+    mapFile = "";
     coverFile = "";
     wheelFile = "";
     marqueeFile = "";
@@ -114,6 +126,9 @@ void ImportScraper::runPasses(QList<GameEntry> &gameEntries,
     bool any = checkType(info.completeBaseName(), textual, textualFile);
     any |= checkType(info.completeBaseName(), screenshots, screenshotFile);
     any |= checkType(info.completeBaseName(), screenshottitles, screenshottitleFile);
+    any |= checkType(info.completeBaseName(), threedcovers, threedcoverFile);
+    any |= checkType(info.completeBaseName(), fullcovers, fullcoverFile);
+    any |= checkType(info.completeBaseName(), maps, mapFile);
     any |= checkType(info.completeBaseName(), covers, coverFile);
     any |= checkType(info.completeBaseName(), wheels, wheelFile);
     any |= checkType(info.completeBaseName(), marquees, marqueeFile);
@@ -155,6 +170,18 @@ void ImportScraper::getScreenshot(GameEntry &game) {
 
 void ImportScraper::getScreenshotTitle(GameEntry &game) {
     game.screenshottitleData = readFile(screenshottitleFile);
+}
+
+void ImportScraper::getthreedcover(GameEntry &game) {
+    game.threedcoverData = readFile(threedcoverFile);
+}
+
+void ImportScraper::getFullcover(GameEntry &game) {
+    game.fullcoverData = readFile(fullcoverFile);
+}
+
+void ImportScraper::getMap(GameEntry &game) {
+    game.mapData = readFile(mapFile);
 }
 
 void ImportScraper::getWheel(GameEntry &game) {

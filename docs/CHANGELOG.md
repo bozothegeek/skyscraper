@@ -7,7 +7,13 @@ humans](https://keepachangelog.com).
 - Added: `--flags missingMedia` to let scrap only missing media if requested
 - Added: `cacheManuals, cacheFanarts, cacheBackcovers and cacheVideos ` to scrap more binary from configuration 
   (set at "false" by default to keep usual behaviors)
-- Added: `cacheScreenshotTitles` to scrap ScreenshotTitles from configuration 
+- Added: `cacheScreenshottitles` to scrap screenshottitle(screenscraper) from configuration 
+  (set at "false" by default to keep usual behaviors)
+- Added: `cache3dcovers` to scrap box-3D(screenscraper) from configuration
+  (set at "false" by default to keep usual behaviors)
+- Added: `cacheFullcovers` to scrap box-texture(screenscraper) from configuration
+  (set at "false" by default to keep usual behaviors)
+- Added: `cacheMaps` to scrap map(screenscraper) from configuration
   (set at "false" by default to keep usual behaviors)
 
 ### Version 3.20.0 (2026-06-04)

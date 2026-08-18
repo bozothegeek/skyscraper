@@ -82,7 +82,10 @@ ScreenScraper::ScreenScraper(Settings *config,
     fetchOrder.append(GameEntry::Elem::VIDEO);
     fetchOrder.append(GameEntry::Elem::MANUAL);
     fetchOrder.append(GameEntry::Elem::FANART);
+    fetchOrder.append(GameEntry::Elem::THREEDCOVER);
     fetchOrder.append(GameEntry::Elem::BACKCOVER);
+    fetchOrder.append(GameEntry::Elem::FULLCOVER);
+    fetchOrder.append(GameEntry::Elem::MAP);
 }
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
@@ -474,6 +477,24 @@ void ScreenScraper::getScreenshotTitle(GameEntry &game) {
     QString url = getJsonText(jsonObj["medias"].toArray(), REGION,
                               QList<QString>({"sstitle"}));
     game.screenshotData = downloadImageWithRetry(url);
+}
+
+void ScreenScraper::getthreedcover(GameEntry &game) {
+    QString url = getJsonText(jsonObj["medias"].toArray(), REGION,
+                              QList<QString>({"box-3D"}));
+    game.threedcoverData = downloadImageWithRetry(url);
+}
+
+void ScreenScraper::getFullcover(GameEntry &game) {
+    QString url = getJsonText(jsonObj["medias"].toArray(), REGION,
+                              QList<QString>({"box-texture"}));
+    game.fullcoverData = downloadImageWithRetry(url);
+}
+
+void ScreenScraper::getMap(GameEntry &game) {
+    QString url = getJsonText(jsonObj["medias"].toArray(), REGION,
+                              QList<QString>({"maps"}));
+    game.mapData = downloadImageWithRetry(url);
 }
 
 void ScreenScraper::getWheel(GameEntry &game) {

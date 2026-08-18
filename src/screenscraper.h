@@ -66,6 +66,9 @@ private:
     void getCover(GameEntry &game) override;
     void getScreenshot(GameEntry &game) override;
     void getScreenshotTitle(GameEntry &game) override;
+    void getthreedcover(GameEntry &game) override;
+    void getFullcover(GameEntry &game) override;
+    void getMap(GameEntry &game) override;
     void getWheel(GameEntry &game) override;
     void getMarquee(GameEntry &game) override;
     void getTexture(GameEntry &game) override;

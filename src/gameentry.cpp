@@ -65,6 +65,15 @@ void GameEntry::calculateCompleteness(bool videoEnabled, bool manualEnabled,
     if (screenshottitleData.isNull() && screenshottitleSrc.isEmpty()) {
         completeness -= valuePerType;
     }
+    if (threedcoverData.isNull() && threedcoverSrc.isEmpty()) {
+        completeness -= valuePerType;
+    }
+    if (fullcoverData.isNull() && fullcoverSrc.isEmpty()) {
+        completeness -= valuePerType;
+    }
+    if (mapData.isNull() && mapSrc.isEmpty()) {
+        completeness -= valuePerType;
+    }
     if (wheelData.isNull() && wheelSrc.isEmpty()) {
         completeness -= valuePerType;
     }
@@ -115,6 +124,9 @@ void GameEntry::resetMedia() {
     coverData.clear();
     screenshotData.clear();
     screenshottitleData.clear();
+    threedcoverData.clear();
+    fullcoverData.clear();
+    mapData.clear();
     wheelData.clear();
     marqueeData.clear();
     textureData.clear();

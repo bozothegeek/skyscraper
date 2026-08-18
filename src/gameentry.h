@@ -48,13 +48,16 @@ public:
         RATING = 0x80,
         AGES = 0x100,
         COVER = 0x200,
+        THREEDCOVER = 0x300,
         SCREENSHOT = 0x400,
         SCREENSHOTTITLE = 0x500,
         WHEEL = 0x800,
         MARQUEE = 0x1000,
         TEXTURE = 0x2000,
+        FULLCOVER = 0x3000,
         VIDEO = 0x4000,
         MANUAL = 0x8000,
+		MAP = 0x9000,
         FANART = 0x10000,
         BACKCOVER = 0x20000,
         ALL = (BACKCOVER << 1) - 1
@@ -65,10 +68,12 @@ public:
 
     static constexpr GameEntry::Types MEDIA =
         GameEntry::Types(BACKCOVER | COVER | FANART | MANUAL | MARQUEE |
-                         SCREENSHOT | SCREENSHOTTITLE | TEXTURE | VIDEO | WHEEL);
+                         SCREENSHOT | TEXTURE | VIDEO | WHEEL |
+                                                 SCREENSHOTTITLE | THREEDCOVER | FULLCOVER | MAP);
 
     static constexpr GameEntry::Types IMAGE = GameEntry::Types(
-        BACKCOVER | COVER | FANART | MARQUEE | SCREENSHOT | SCREENSHOTTITLE | TEXTURE | WHEEL);
+        BACKCOVER | COVER | FANART | MARQUEE | SCREENSHOT | TEXTURE | WHEEL |
+                SCREENSHOTTITLE | THREEDCOVER | FULLCOVER | MAP);
 
     static const QMap<Elem, QString> commonGamelistElems() {
         /* KEY, "gamelist XML element" */
@@ -80,7 +85,6 @@ public:
                                      {TAGS, "genre"},
                                      {RELEASEDATE, "releasedate"},
                                      {SCREENSHOT, "image"},
-                                     {SCREENSHOTTITLE, "screenshottitle"},
                                      {VIDEO, "video"},
                                      {RATING, "rating"},
                                      // ES, ES-DE, Bato: wheel usage via marquee
@@ -95,7 +99,12 @@ public:
                                      // Batocera: Part of Gamelist
                                      // ES variants: maybe part of Gamelist
                                      // ES-DE: Only in filesystem
-                                     {BACKCOVER, "boxback"}};
+                                     {BACKCOVER, "boxback"},
+									 // Pixl: Part of Gamelit
+									 {SCREENSHOTTITLE, "screenshottitle"},
+                                                                         {THREEDCOVER, "threedcover"},
+									 {FULLCOVER, "fullcover"},
+									 {MAP, "map"}};
         return m;
     };
 
@@ -151,6 +160,15 @@ public:
     QByteArray screenshottitleData = QByteArray();
     QString screenshottitleFile = "";
     QString screenshottitleSrc = "";
+    QByteArray threedcoverData = QByteArray();
+    QString threedcoverFile = "";
+    QString threedcoverSrc = "";
+    QByteArray fullcoverData = QByteArray();
+    QString fullcoverFile = "";
+    QString fullcoverSrc = "";
+    QByteArray mapData = QByteArray();
+    QString mapFile = "";
+    QString mapSrc = "";
     QByteArray wheelData = QByteArray();
     QString wheelFile = "";
     QString wheelSrc = "";

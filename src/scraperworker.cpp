@@ -192,12 +192,15 @@ void ScraperWorker::run() {
                 // need "--flags missingmedia" with cache activated
                 // or media flags for some media as "video,manual,fanart and backcover"
                 if (config.missingMedia) {
-                    ncprintf("config.cacheScreenshottitles : %b\n",
-                             config.cacheScreenshottitles);
+                    //ncprintf("config.cacheScreenshottitles : %b\n",
+                    //         config.cacheScreenshottitles);
                     // binary data
                     if (((cachedGame.coverFile == "") && config.cacheCovers) ||
                        ((cachedGame.screenshotFile == "") && config.cacheScreenshots) ||
                        ((cachedGame.screenshottitleFile == "") && config.cacheScreenshottitles) ||
+                       ((cachedGame.threedcoverFile == "") && config.cache3dcovers) ||
+                       ((cachedGame.fullcoverFile == "") && config.cacheFullcovers) ||
+                       ((cachedGame.mapFile == "") && config.cacheMaps) ||
                        ((cachedGame.wheelFile == "") && config.cacheWheels) ||
                        ((cachedGame.marqueeFile == "") && config.cacheMarquees) ||
                        ((cachedGame.textureFile == "") && config.cacheTextures) ||
@@ -530,6 +533,42 @@ void ScraperWorker::run() {
                 QString((config.cacheScreenshottitles || cacheScraper ? ""
                                                                  : " (uncached)")) +
                 " (" + game.screenshottitleSrc + ")\n");
+        }
+        if (config.cache3dcovers) {
+            output.append(
+                "3Dcover:     " +
+                QString(
+                    (game.threedcoverSrc.isEmpty() && game.threedcoverData.isNull()
+                         ? "\033[1;31mNO"
+                         : "\033[1;32mYES")) +
+                "\033[0m" +
+                QString((config.cache3dcovers || cacheScraper ? ""
+                                                                 : " (uncached)")) +
+                " (" + game.threedcoverSrc + ")\n");
+        }
+        if (config.cacheFullcovers) {
+            output.append(
+                "Fullcover:     " +
+                QString(
+                    (game.fullcoverSrc.isEmpty() && game.fullcoverData.isNull()
+                         ? "\033[1;31mNO"
+                         : "\033[1;32mYES")) +
+                "\033[0m" +
+                QString((config.cacheFullcovers || cacheScraper ? ""
+                                                                 : " (uncached)")) +
+                " (" + game.fullcoverSrc + ")\n");
+        }
+        if (config.cacheMaps) {
+            output.append(
+                "Map:     " +
+                QString(
+                    (game.mapSrc.isEmpty() && game.mapData.isNull()
+                         ? "\033[1;31mNO"
+                         : "\033[1;32mYES")) +
+                "\033[0m" +
+                QString((config.cacheMaps || cacheScraper ? ""
+                                                                 : " (uncached)")) +
+                " (" + game.mapSrc + ")\n");
         }
         // use wheelSrc here as wheel might be processed/used in marquee during
         // gl creation avoid signaling NO to the user. wheeldata is set when

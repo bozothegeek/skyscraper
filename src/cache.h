@@ -62,6 +62,9 @@ struct ResCounts {
     int covers;
     int screenshots;
     int screenshottitles;
+    int threedcovers;
+    int fullcovers;
+    int maps;
     int wheels;
     int marquees;
     int textures;

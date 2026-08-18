@@ -94,6 +94,22 @@
     <source>arcadedb</source>
     <source>openretro</source>
   </order>
+  <order type="screenshottitle">
+    <source>import</source>
+    <source>screenscraper</source>
+  </order>
+  <order type="3dcover">
+    <source>import</source>
+    <source>screenscraper</source>
+  </order>
+  <order type="fullcover">
+    <source>import</source>
+    <source>screenscraper</source>
+  </order>
+  <order type="map">
+    <source>import</source>
+    <source>screenscraper</source>
+  </order>
   <order type="wheel">
     <source>import</source>
     <source>screenscraper</source>

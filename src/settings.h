@@ -63,6 +63,9 @@ struct Settings {
     bool addFolders = false;        // EmulationStation and ES-DE
     QString screenshotsFolder = "";
     QString screenshottitlesFolder = "";
+    QString threedcoversFolder = "";
+    QString fullcoversFolder = "";
+    QString mapsFolder = "";
     QString coversFolder = "";
     QString wheelsFolder = "";
     QString marqueesFolder = "";
@@ -142,7 +145,13 @@ struct Settings {
     bool cacheScreenshots = true;
     bool skipExistingScreenshots = false;
     bool cacheScreenshottitles = false;
-    bool skipExistingScreenshotTitles = false;
+    bool skipExistingScreenshottitles = false;
+    bool cache3dcovers = false;
+    bool skipExisting3dcovers = false;
+    bool cacheFullcovers = false;
+    bool skipExistingFullcovers = false;
+    bool cacheMaps = false;
+    bool skipExistingMaps = false;
     // If true, will crop away black borders around screenshots
     bool cropBlack = true;
     bool cacheWheels = true;
@@ -234,6 +243,9 @@ private:
         {"cacheResize",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheScreenshots",        QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheScreenshottitles",   QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"cache3dcovers",		    QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"cacheFullcovers",         QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"cacheMaps",               QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheTextures",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheWheels",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheManuals",            QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},

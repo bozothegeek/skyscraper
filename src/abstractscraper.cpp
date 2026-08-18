@@ -154,6 +154,30 @@ void AbstractScraper::populateGameEntry(GameEntry &game, int media) {
                 //ncprintf(" Get done");
             }
             break;
+        case GameEntry::Elem::THREEDCOVER:
+            //for dev debug
+            //ncprintf(" GameEntry::Elem::THREEDCOVER");
+            if (config->cache3dcovers && game.threedcoverFile == "") {
+                getthreedcover(game);
+                //ncprintf(" Get done");
+            }
+            break;
+        case GameEntry::Elem::FULLCOVER:
+            //for dev debug
+            //ncprintf(" GameEntry::Elem::FULLCOVER");
+            if (config->cacheFullcovers && game.fullcoverFile == "") {
+                getFullcover(game);
+                //ncprintf(" Get done");
+            }
+            break;
+        case GameEntry::Elem::MAP:
+            //for dev debug
+            //ncprintf(" GameEntry::Elem::MAP");
+            if (config->cacheMaps && game.mapFile == "") {
+                getMap(game);
+                //ncprintf(" Get done");
+            }
+            break;
         case GameEntry::Elem::WHEEL:
             //for dev debug
             //ncprintf(" GameEntry::Elem::WHEEL");
@@ -429,6 +453,66 @@ void AbstractScraper::getScreenshotTitle(GameEntry &game) {
         }
         game.screenshottitleData = downloadMedia(screenshottitleUrl);
     }
+}
+
+void AbstractScraper::getthreedcover(GameEntry &game) {
+    if (threedcoverPre.isEmpty()) {
+        return;
+    }
+    for (const auto &nom : threedcoverPre) {
+        if (!checkNom(nom)) {
+            return;
+        }
+    }
+    for (const auto &nom : threedcoverPre) {
+        nomNom(nom);
+    }
+    QString threedcoverUrl =
+        data.left(data.indexOf(threedcoverPost.toUtf8())).replace("&amp;", "&");
+    if (threedcoverUrl.left(4) != "http") {
+        threedcoverUrl.prepend(baseUrl + (threedcoverUrl.left(1) == "/" ? "" : "/"));
+    }
+    game.threedcoverData = downloadMedia(threedcoverUrl);
+}
+
+void AbstractScraper::getFullcover(GameEntry &game) {
+    if (fullcoverPre.isEmpty()) {
+        return;
+    }
+    for (const auto &nom : fullcoverPre) {
+        if (!checkNom(nom)) {
+            return;
+        }
+    }
+    for (const auto &nom : fullcoverPre) {
+        nomNom(nom);
+    }
+    QString fullcoverUrl =
+        data.left(data.indexOf(fullcoverPost.toUtf8())).replace("&amp;", "&");
+    if (fullcoverUrl.left(4) != "http") {
+        fullcoverUrl.prepend(baseUrl + (fullcoverUrl.left(1) == "/" ? "" : "/"));
+    }
+    game.fullcoverData = downloadMedia(fullcoverUrl);
+}
+
+void AbstractScraper::getMap(GameEntry &game) {
+    if (mapPre.isEmpty()) {
+        return;
+    }
+    for (const auto &nom : mapPre) {
+        if (!checkNom(nom)) {
+            return;
+        }
+    }
+    for (const auto &nom : mapPre) {
+        nomNom(nom);
+    }
+    QString mapUrl =
+        data.left(data.indexOf(mapPost.toUtf8())).replace("&amp;", "&");
+    if (mapUrl.left(4) != "http") {
+        mapUrl.prepend(baseUrl + (mapUrl.left(1) == "/" ? "" : "/"));
+    }
+    game.mapData = downloadMedia(mapUrl);
 }
 
 // TODO: only for html scrape modules (currently none)

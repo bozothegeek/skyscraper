@@ -71,7 +71,7 @@ over a table cell to display the scraper module as tooltip:
 - API request limit: _20k per day for registered users_
 - Thread limit: _1 or more depending on user credentials_
 - Platform support: _[Check list under "Systémes"](https://www.screenscraper.fr) or see `screenscraper_platforms.json` sibling to your `config.ini`_
-- Media support: `backcover`, `cover`, `fanart`, `manual`, `marquee`, `screenshot`, `texture`, `video`, `wheel`
+- Media support: `backcover`, `cover`, `fanart`, `manual`, `marquee`, `screenshot`, `screenshottitle`, `3dcover`, `fullcover`, `maps`,`texture`, `video`, `wheel`
 - Example use:
   ```bash
   Skyscraper -p snes -s screenscraper

@@ -107,6 +107,18 @@ void XmlReader::addEntries(const QDomNodeList &nodes,
             inputFolder, node.firstChildElement(
                                  GameEntry::getTag(GameEntry::Elem::SCREENSHOTTITLE))
                              .text());
+        entry.threedcoverFile = PathTools::makeAbsolutePath(
+            inputFolder, node.firstChildElement(
+                                 GameEntry::getTag(GameEntry::Elem::THREEDCOVER))
+                             .text());
+        entry.fullcoverFile = PathTools::makeAbsolutePath(
+            inputFolder, node.firstChildElement(
+                                 GameEntry::getTag(GameEntry::Elem::FULLCOVER))
+                             .text());
+        entry.mapFile = PathTools::makeAbsolutePath(
+            inputFolder, node.firstChildElement(
+                                 GameEntry::getTag(GameEntry::Elem::MAP))
+                             .text());
         entry.marqueeFile = PathTools::makeAbsolutePath(
             inputFolder,
             node.firstChildElement(GameEntry::getTag(GameEntry::Elem::MARQUEE))

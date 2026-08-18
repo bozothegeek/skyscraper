@@ -98,6 +98,15 @@ QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,
     case GameEntry::SCREENSHOTTITLE:
         fp = getScreenshottitlesFolder();
         break;
+    case GameEntry::THREEDCOVER:
+        fp = get3dcoversFolder();
+        break;
+    case GameEntry::FULLCOVER:
+        fp = getFullcoversFolder();
+        break;
+    case GameEntry::MAP:
+        fp = getMapsFolder();
+        break;
     case GameEntry::TEXTURE:
         fp = getTexturesFolder();
         break;
@@ -241,7 +250,25 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
     if (GameEntry::SCREENSHOTTITLE & toCopy) {
         MediaProps m =
             MediaProps(GameEntry::SCREENSHOTTITLE, game.screenshottitleData,
-                       game.screenshottitleFile, config->skipExistingScreenshotTitles);
+                       game.screenshottitleFile, config->skipExistingScreenshottitles);
+        medias.append(m);
+    }
+    if (GameEntry::THREEDCOVER & toCopy) {
+        MediaProps m =
+            MediaProps(GameEntry::THREEDCOVER, game.threedcoverData,
+                       game.threedcoverFile, config->skipExisting3dcovers);
+        medias.append(m);
+    }
+    if (GameEntry::FULLCOVER & toCopy) {
+        MediaProps m =
+            MediaProps(GameEntry::FULLCOVER, game.fullcoverData,
+                       game.fullcoverFile, config->skipExistingFullcovers);
+        medias.append(m);
+    }
+    if (GameEntry::MAP & toCopy) {
+        MediaProps m =
+            MediaProps(GameEntry::MAP, game.mapData,
+                       game.mapFile, config->skipExistingMaps);
         medias.append(m);
     }
     if (GameEntry::TEXTURE & toCopy) {
@@ -295,7 +322,13 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
     if (drop & GameEntry::SCREENSHOT)
         game.screenshotFile.clear();
     if (drop & GameEntry::SCREENSHOTTITLE)
-        game.screenshotFile.clear();
+        game.screenshottitleFile.clear();
+    if (drop & GameEntry::THREEDCOVER)
+        game.threedcoverFile.clear();
+    if (drop & GameEntry::FULLCOVER)
+        game.fullcoverFile.clear();
+    if (drop & GameEntry::MAP)
+        game.mapFile.clear();
     if (drop & GameEntry::TEXTURE)
         game.textureFile.clear();
     if (drop & GameEntry::VIDEO)

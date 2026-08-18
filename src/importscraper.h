@@ -52,6 +52,9 @@ public:
     void getReleaseDate(GameEntry &game) override;
     void getScreenshot(GameEntry &game) override;
     void getScreenshotTitle(GameEntry &game) override;
+    void getthreedcover(GameEntry &game) override;
+    void getFullcover(GameEntry &game) override;
+    void getMap(GameEntry &game) override;
     void getTags(GameEntry &game) override;
     void getTexture(GameEntry &game) override;
     void getTitle(GameEntry &game) override;
@@ -85,6 +88,9 @@ private:
     QList<QFileInfo> covers;
     QList<QFileInfo> screenshots;
     QList<QFileInfo> screenshottitles;
+    QList<QFileInfo> threedcovers;
+    QList<QFileInfo> fullcovers;
+    QList<QFileInfo> maps;
     QList<QFileInfo> wheels;
     QList<QFileInfo> marquees;
     QList<QFileInfo> textures;
@@ -97,6 +103,9 @@ private:
     QString coverFile = "";
     QString screenshotFile = "";
     QString screenshottitleFile = "";
+    QString threedcoverFile = "";
+    QString fullcoverFile = "";
+    QString mapFile = "";
     QString wheelFile = "";
     QString marqueeFile = "";
     QString textureFile = "";

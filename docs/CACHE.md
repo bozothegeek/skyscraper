@@ -155,3 +155,19 @@ themes for a game (file stored below `fanarts` subfolder)
 
 Since v3.18: Image of the back side of a game packaging, aka cover back side or
 box back (file stored below `backcovers` subfolder)
+
+##### screenshottitle
+
+Since v3.21: Image of the title screen of a game (file stored below `screenshottitles` subfolder)
+
+##### 3dcover
+
+Since v3.21: Image of the boc 3d of a game packaging (file stored below `3dcovers` subfolder)
+
+##### fullcover
+
+Since v3.21: Image of the full textture of a game packaging (file stored below `fullcovers` subfolder)
+
+##### map
+
+Since v3.21: Image of the map of a game (file stored below `maps` subfolder)

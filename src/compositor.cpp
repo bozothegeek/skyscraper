@@ -335,8 +335,26 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
             }
         } else if (output.resType == "screenshottitle") {
             filename.prepend(config->screenshottitlesFolder);
-            if (config->skipExistingScreenshotTitles && QFileInfo::exists(filename)) {
+            if (config->skipExistingScreenshottitles && QFileInfo::exists(filename)) {
                 game.screenshottitleFile = filename;
+                continue;
+            }
+        } else if (output.resType == "3dcover") {
+            filename.prepend(config->threedcoversFolder);
+            if (config->skipExisting3dcovers && QFileInfo::exists(filename)) {
+                game.threedcoverFile = filename;
+                continue;
+            }
+        } else if (output.resType == "fullcover") {
+            filename.prepend(config->fullcoversFolder);
+            if (config->skipExistingFullcovers && QFileInfo::exists(filename)) {
+                game.fullcoverFile = filename;
+                continue;
+            }
+        } else if (output.resType == "map") {
+            filename.prepend(config->mapsFolder);
+            if (config->skipExistingMaps && QFileInfo::exists(filename)) {
+                game.mapFile = filename;
                 continue;
             }
         } else if (output.resType == "wheel") {
@@ -414,6 +432,15 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
             } else if (output.resType == "screenshottitle") {
                 game.screenshottitleFile = filename;
                 artworkBins |= GameEntry::Elem::SCREENSHOTTITLE;
+            } else if (output.resType == "threedcover") {
+                game.threedcoverFile = filename;
+                artworkBins |= GameEntry::Elem::THREEDCOVER;
+            } else if (output.resType == "fullcover") {
+                game.fullcoverFile = filename;
+                artworkBins |= GameEntry::Elem::FULLCOVER;
+            } else if (output.resType == "map") {
+                game.mapFile = filename;
+                artworkBins |= GameEntry::Elem::MAP;
             } else if (output.resType == "wheel") {
                 game.wheelFile = filename;
                 artworkBins |= GameEntry::Elem::WHEEL;
