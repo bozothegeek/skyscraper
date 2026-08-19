@@ -405,7 +405,7 @@ QString NameTools::getCacheId(const QFileInfo &info) {
     }
     // If file is larger than 50 MiBs, use filename checksum for cache id for
     // optimization reasons
-    if (info.size() > 52428800) {
+    if (info.size() > 52428800 || info.isDir()) {
         cacheIdFromData = false;
     }
     // If file is empty always do checksum on filename

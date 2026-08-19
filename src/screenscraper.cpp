@@ -642,31 +642,39 @@ QList<QString> ScreenScraper::getSearchNames(const QFileInfo &info,
     }
 
     if (!unpack) {
-        // For normal file reading
-        QFile romFile(info.absoluteFilePath());
-        if (romFile.open(QIODevice::ReadOnly)) {
-            while (!romFile.atEnd()) {
+        // For normal file reading / skip it if it's a directory to avoid to caculate any crc/sha1/md5 for that
+        if(!info.isDir()){
+            QFile romFile(info.absoluteFilePath());
+            if (romFile.open(QIODevice::ReadOnly)) {
+                while (!romFile.atEnd()) {
 
-                QByteArray dataSeg = romFile.read(1024);
-                md5.addData(dataSeg);
-                sha1.addData(dataSeg);
-                crc.pushData(1, dataSeg.data(), dataSeg.length());
+                    QByteArray dataSeg = romFile.read(1024);
+                    md5.addData(dataSeg);
+                    sha1.addData(dataSeg);
+                    crc.pushData(1, dataSeg.data(), dataSeg.length());
+                }
+                romFile.close();
+            } else {
+                    qWarning() << "Romfile not readable" << info.absoluteFilePath();
             }
-            romFile.close();
-        } else {
-            qWarning() << "Romfile not readable" << info.absoluteFilePath();
         }
     }
 
-    QString crcResult = QString::number(crc.releaseInstance(1), 16);
+    QString crcResult;
+    QString md5Result;
+    QString sha1Result;
+    if(!info.isDir()){ //to avoid to caclulate something on directory
+        crcResult = QString::number(crc.releaseInstance(1), 16);
+        md5Result = md5.result().toHex();
+        sha1Result = sha1.result().toHex();
+    }
+    //and use padding if needed
     while (crcResult.length() < 8) {
         crcResult.prepend("0");
     }
-    QString md5Result = md5.result().toHex();
     while (md5Result.length() < 32) {
         md5Result.prepend("0");
     }
-    QString sha1Result = sha1.result().toHex();
     while (sha1Result.length() < 40) {
         sha1Result.prepend("0");
     }

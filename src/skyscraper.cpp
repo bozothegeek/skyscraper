@@ -529,12 +529,8 @@ void Skyscraper::run() {
 
 void Skyscraper::prepareFileQueue() {
     QDir::Filters filter = QDir::Files;
-    // special case scummvm: users can use .svm in folder name to work around
-    // the limitation of the ScummVM / lr-scummvm launch integration in
-    // ES/RetroPie
-    if (config.platform == "scummvm") {
-        filter |= QDir::Dirs;
-    }
+    //add directories using extensions for system as scummvm, teknoparrot, etc..
+    filter |= QDir::Dirs;
     QDir inputDir(config.inputFolder, getPlatformFileExtensions(), QDir::Name,
                   filter);
     if (!inputDir.exists()) {
