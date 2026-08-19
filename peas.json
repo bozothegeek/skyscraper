@@ -1886,6 +1886,17 @@
             "*.symbian"
         ]
     },
+    "teknoparrot": {
+        "aliases": [
+            "typex",
+            "typex2",
+            "typex4"
+        ],
+        "formats": [
+            "*.teknoparrot",
+            "*.tp"
+        ]
+    },
     "ti99": {
         "aliases": [
             "texas instruments ti-99",
