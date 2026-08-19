@@ -186,6 +186,7 @@ void ScraperWorker::run() {
                 if (cachedGame.platform.isEmpty()) {
                     cachedGame.platform = config.platform;
                 }
+                //add cachedGame in gameEntries to reuse data from cache
                 gameEntries.append(cachedGame);
 
                 //check here if we have missing media

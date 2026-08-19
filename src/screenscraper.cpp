@@ -198,6 +198,20 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         // Now parse the JSON
         jsonObj = QJsonDocument::fromJson(data).object();
 
+        //backup json in /tmp to avoid to redownload later
+        // Wrap the object into a QJsonDocument
+        QJsonDocument doc(jsonObj);
+
+        // 2. Open the file for writing
+        QFile file("/tmp/screenscraper-output.json");
+        if (file.open(QIODevice::WriteOnly)) {
+            // Write formatted/indented JSON (use QJsonDocument::Compact for smaller size)
+            file.write(doc.toJson(QJsonDocument::Indented));
+            file.close();
+        } else {
+            qWarning() << "Failed to open file for writing:" << file.errorString();
+        }
+
         // Check if we got a valid JSON document back
         if (jsonObj.isEmpty()) {
             ncprintf(
