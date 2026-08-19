@@ -111,226 +111,273 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
         (platformId == -1 ? "" : "&systemeid=" + QString::number(platformId)) +
         "&output=json&" + searchName;
 
-    ncprintf("Screenscraper Game Info URL: %s \n",
-             gameUrl.toStdString().c_str());
+    QString tmpJsonFilePath = "/tmp/screenscraper-" + QString::number(platformId) + "-" + searchName + ".json";
 
-    tctr = 0;
-    statusTimer.start(1000);
+    if (QFile::exists(tmpJsonFilePath)) {
+        qDebug() << "File already exists:" << tmpJsonFilePath;
+        QFile file(tmpJsonFilePath);
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QByteArray data = file.readAll();
+            file.close();
 
-    for (int retries = 0; retries < RETRIESMAX; ++retries) {
-        limiter.exec();
-        netComm->request(gameUrl);
-        q.exec();
-        data = netComm->getData();
+            QJsonParseError parseError;
+            QJsonDocument doc = QJsonDocument::fromJson(data, &parseError);
 
-        // Minor optimization with minimal more RAM usage
-        QByteArray headerData = data.left(1024);
-        // Do error checks on headerData. It's more stable than checking the
-        // potentially faulty JSON
-        if (headerData.isEmpty()) {
-            int timeout = TIMEOUT_SEC << (1 + retries);
-            ncprintf(
-                "\033[1;33mRetrying request with timeout of %ds...\033[0m\n\n",
-                timeout);
-            netComm->setTimeout(timeout);
-            tctr = 0;
-            continue;
-        } else if (headerData.contains("non trouvée")) {
-            statusTimer.stop();
-            return;
-        } else if (headerData.contains("API totalement fermé")) {
-            ncprintf("\033[1;31mThe ScreenScraper API is currently closed, "
-                     "exiting nicely...\033[0m\n\n");
-            statusTimer.stop();
-            reqRemaining = 0;
-            return;
-        } else if (headerData.contains(
-                       "Le logiciel de scrape utilisé a été blacklisté")) {
-            ncprintf("\033[1;31mSkyscraper has apparently been blacklisted at "
-                     "ScreenScraper, exiting nicely...\033[0m\n\n");
-            statusTimer.stop();
-            reqRemaining = 0;
-            return;
-        } else if (headerData.contains("Votre quota de scrape est")) {
-            ncprintf(
-                "\033[1;31mYour daily ScreenScraper request limit has been "
-                "reached, exiting nicely...\033[0m\n\n");
-            reqRemaining = 0;
-            statusTimer.stop();
-            return;
-        } else if (
-            headerData.contains("API fermé pour les non membres") ||
-            headerData.contains("API closed for non-registered members") ||
-            headerData.contains(
-                "****T****h****e**** ****m****a****x****i****m****u****m**** "
-                "****t****h****r****e****a****d****s**** "
-                "****a****l****l****o****w****e****d**** ****t****o**** "
-                "****l****e****e****c****h****e****r**** "
-                "****u****s****e****r****s**** ****i****s**** "
-                "****a****l****r****e****a****d****y**** "
-                "****u****s****e****d****")) {
-            ncprintf(
-                "\033[1;31mThe screenscraper service is currently closed or "
-                "too busy to handle requests from unregistered and inactive "
-                "users. Sign up for an account at https://www.screenscraper.fr "
-                "and contribute to gain more threads. Then use the credentials "
-                "with Skyscraper using the '-u user:pass' command line option "
-                "or by setting 'userCreds=\"user:pass\"' in "
-                "'%s/config.ini'.\033[0m\n\n",
-                Config::getSkyFolder().toStdString().c_str());
-            if (retries == RETRIESMAX - 1) {
+            if (parseError.error == QJsonParseError::NoError && doc.isObject()) {
+                jsonObj = doc.object();
+                qDebug() << "JSON loaded successfully!";
+                // Download or create new file
+                ncprintf("Using Screenscraper Game Info Json file: %s \n",
+                         tmpJsonFilePath.toStdString().c_str());
+
+                GameEntry game;
+                game.title = getJsonText(jsonObj["noms"].toArray(), REGION);
+                game.url = gameUrl;
+                game.platform = jsonObj["systeme"].toObject()["text"].toString();
+                game.releaseDate = getJsonText(jsonObj["dates"].toArray(), REGION);
+
+                bool isDuplicate = !gameEntries.isEmpty() &&
+                                   gameEntries.last().title == game.title &&
+                                   gameEntries.last().platform == game.platform &&
+                                   gameEntries.last().releaseDate == game.releaseDate;
+                if (!isDuplicate) {
+                    gameEntries.append(game);
+                }
+            } else {
+                qWarning() << "Failed to parse JSON:" << parseError.errorString();
+            }
+        } else {
+            qWarning() << "Could not open file for reading:" << file.errorString();
+        }
+    }
+    else {
+        qDebug() << "File does not exist:" << tmpJsonFilePath;
+        // Download or create new file
+        ncprintf("Download from Screenscraper Game Info URL: %s \n",
+                 gameUrl.toStdString().c_str());
+        tctr = 0;
+        statusTimer.start(1000);
+
+        for (int retries = 0; retries < RETRIESMAX; ++retries) {
+            limiter.exec();
+            netComm->request(gameUrl);
+            q.exec();
+            data = netComm->getData();
+
+            // Minor optimization with minimal more RAM usage
+            QByteArray headerData = data.left(1024);
+            // Do error checks on headerData. It's more stable than checking the
+            // potentially faulty JSON
+            if (headerData.isEmpty()) {
+                int timeout = TIMEOUT_SEC << (1 + retries);
+                ncprintf(
+                    "\033[1;33mRetrying request with timeout of %ds...\033[0m\n\n",
+                    timeout);
+                netComm->setTimeout(timeout);
+                tctr = 0;
+                continue;
+            } else if (headerData.contains("non trouvée")) {
+                statusTimer.stop();
+                return;
+            } else if (headerData.contains("API totalement fermé")) {
+                ncprintf("\033[1;31mThe ScreenScraper API is currently closed, "
+                         "exiting nicely...\033[0m\n\n");
+                statusTimer.stop();
+                reqRemaining = 0;
+                return;
+            } else if (headerData.contains(
+                           "Le logiciel de scrape utilisé a été blacklisté")) {
+                ncprintf("\033[1;31mSkyscraper has apparently been blacklisted at "
+                         "ScreenScraper, exiting nicely...\033[0m\n\n");
+                statusTimer.stop();
+                reqRemaining = 0;
+                return;
+            } else if (headerData.contains("Votre quota de scrape est")) {
+                ncprintf(
+                    "\033[1;31mYour daily ScreenScraper request limit has been "
+                    "reached, exiting nicely...\033[0m\n\n");
                 reqRemaining = 0;
                 statusTimer.stop();
                 return;
-            } else {
+            } else if (
+                headerData.contains("API fermé pour les non membres") ||
+                headerData.contains("API closed for non-registered members") ||
+                headerData.contains(
+                    "****T****h****e**** ****m****a****x****i****m****u****m**** "
+                    "****t****h****r****e****a****d****s**** "
+                    "****a****l****l****o****w****e****d**** ****t****o**** "
+                    "****l****e****e****c****h****e****r**** "
+                    "****u****s****e****r****s**** ****i****s**** "
+                    "****a****l****r****e****a****d****y**** "
+                    "****u****s****e****d****")) {
+                ncprintf(
+                    "\033[1;31mThe screenscraper service is currently closed or "
+                    "too busy to handle requests from unregistered and inactive "
+                    "users. Sign up for an account at https://www.screenscraper.fr "
+                    "and contribute to gain more threads. Then use the credentials "
+                    "with Skyscraper using the '-u user:pass' command line option "
+                    "or by setting 'userCreds=\"user:pass\"' in "
+                    "'%s/config.ini'.\033[0m\n\n",
+                    Config::getSkyFolder().toStdString().c_str());
+                if (retries == RETRIESMAX - 1) {
+                    reqRemaining = 0;
+                    statusTimer.stop();
+                    return;
+                } else {
+                    continue;
+                }
+            }
+
+            if (tctr >= DELAY_NOTE_AFTER_SEC) {
+                ncprintf("Response after %ds           \n", tctr);
+            }
+            statusTimer.stop();
+
+            // Fix faulty JSON that is sometimes received back from ScreenScraper
+            data.replace("],\n\t\t}", "]\n\t\t}");
+
+            // Now parse the JSON
+            jsonObj = QJsonDocument::fromJson(data).object();
+
+            // Check if we got a valid JSON document back
+            if (jsonObj.isEmpty()) {
+                ncprintf(
+                    "\033[1;31mScreenScraper APIv2 returned invalid / empty "
+                    "Json. Their servers are probably down. Please try again "
+                    "later or use a different scraping module with '-s MODULE'. "
+                    "Check 'Skyscraper --help' for more information.\033[0m\n");
+                data.replace(StrTools::unMagic("204;198;236;130;203;181;203;126;"
+                                               "191;167;200;198;192;228;169;156"),
+                             "****");
+                data.replace(config->password.toUtf8(), "****");
+                QString errFile = Config::getSkyFolder(Config::SkyFolderType::LOG) %
+                                  "/screenscraper_error.txt";
+                QFile errorResponse(errFile);
+                if (errorResponse.open(QIODevice::WriteOnly)) {
+                    if (data.length() > 64) {
+                        if (data.startsWith("****I****l**** "
+                                            "****m****a****n****q****u****e****")) {
+                            data.replace("****", "");
+                            data.prepend("FR: ");
+                            data.append(
+                                "\nEN: Mandatory fields are missing in the URL.\n");
+                        }
+                        errorResponse.write(data);
+                        ncprintf("The erroneous answer was written to '%s'. If you "
+                                 "expected to scrape game data and this error "
+                                 "persists, please consider filing a bug report at "
+                                 "'https://github.com/Gemba/skyscraper/issues' and "
+                                 "attach that file.\n",
+                                 PathTools::pathToStdStr(errFile).c_str());
+                    }
+                    errorResponse.close();
+                }
+                break; // DON'T try again! If we don't get a valid JSON document,
+                       // something is very wrong with the API
+            }
+
+            // Check if the request was successful
+            if (jsonObj["header"].toObject()["success"].toString() != "true") {
+                ncprintf(
+                    "Request returned a success state of '%s'. Error was:\n%s\n",
+                    jsonObj["header"]
+                        .toObject()["success"]
+                        .toString()
+                        .toStdString()
+                        .c_str(),
+                    jsonObj["header"]
+                        .toObject()["error"]
+                        .toString()
+                        .toStdString()
+                        .c_str());
+                // Try again. We handle important errors above, so something weird
+                // is going on here
                 continue;
             }
-        }
 
-        if (tctr >= DELAY_NOTE_AFTER_SEC) {
-            ncprintf("Response after %ds           \n", tctr);
-        }
-        statusTimer.stop();
-
-        // Fix faulty JSON that is sometimes received back from ScreenScraper
-        data.replace("],\n\t\t}", "]\n\t\t}");
-
-        // Now parse the JSON
-        jsonObj = QJsonDocument::fromJson(data).object();
-
-        //backup json in /tmp to avoid to redownload later
-        // Wrap the object into a QJsonDocument
-        QJsonDocument doc(jsonObj);
-
-        // 2. Open the file for writing
-        QFile file("/tmp/screenscraper-output.json");
-        if (file.open(QIODevice::WriteOnly)) {
-            // Write formatted/indented JSON (use QJsonDocument::Compact for smaller size)
-            file.write(doc.toJson(QJsonDocument::Indented));
-            file.close();
-        } else {
-            qWarning() << "Failed to open file for writing:" << file.errorString();
-        }
-
-        // Check if we got a valid JSON document back
-        if (jsonObj.isEmpty()) {
-            ncprintf(
-                "\033[1;31mScreenScraper APIv2 returned invalid / empty "
-                "Json. Their servers are probably down. Please try again "
-                "later or use a different scraping module with '-s MODULE'. "
-                "Check 'Skyscraper --help' for more information.\033[0m\n");
-            data.replace(StrTools::unMagic("204;198;236;130;203;181;203;126;"
-                                           "191;167;200;198;192;228;169;156"),
-                         "****");
-            data.replace(config->password.toUtf8(), "****");
-            QString errFile = Config::getSkyFolder(Config::SkyFolderType::LOG) %
-                              "/screenscraper_error.txt";
-            QFile errorResponse(errFile);
-            if (errorResponse.open(QIODevice::WriteOnly)) {
-                if (data.length() > 64) {
-                    if (data.startsWith("****I****l**** "
-                                        "****m****a****n****q****u****e****")) {
-                        data.replace("****", "");
-                        data.prepend("FR: ");
-                        data.append(
-                            "\nEN: Mandatory fields are missing in the URL.\n");
-                    }
-                    errorResponse.write(data);
-                    ncprintf("The erroneous answer was written to '%s'. If you "
-                             "expected to scrape game data and this error "
-                             "persists, please consider filing a bug report at "
-                             "'https://github.com/Gemba/skyscraper/issues' and "
-                             "attach that file.\n",
-                             PathTools::pathToStdStr(errFile).c_str());
+            // Check if user has exceeded daily request limit
+            if (!jsonObj["response"]
+                     .toObject()["ssuser"]
+                     .toObject()["requeststoday"]
+                     .toString()
+                     .isEmpty() &&
+                !jsonObj["response"]
+                     .toObject()["ssuser"]
+                     .toObject()["maxrequestsperday"]
+                     .toString()
+                     .isEmpty()) {
+                reqRemaining = jsonObj["response"]
+                                   .toObject()["ssuser"]
+                                   .toObject()["maxrequestsperday"]
+                                   .toString()
+                                   .toInt() -
+                               jsonObj["response"]
+                                   .toObject()["ssuser"]
+                                   .toObject()["requeststoday"]
+                                   .toString()
+                                   .toInt();
+                if (reqRemaining <= 0) {
+                    ncprintf("\033[1;31mYour daily ScreenScraper request limit has "
+                             "been reached, exiting nicely...\033[0m\n\n");
                 }
-                errorResponse.close();
             }
-            break; // DON'T try again! If we don't get a valid JSON document,
-                   // something is very wrong with the API
-        }
 
-        // Check if the request was successful
-        if (jsonObj["header"].toObject()["success"].toString() != "true") {
-            ncprintf(
-                "Request returned a success state of '%s'. Error was:\n%s\n",
-                jsonObj["header"]
-                    .toObject()["success"]
-                    .toString()
-                    .toStdString()
-                    .c_str(),
-                jsonObj["header"]
-                    .toObject()["error"]
-                    .toString()
-                    .toStdString()
-                    .c_str());
-            // Try again. We handle important errors above, so something weird
-            // is going on here
-            continue;
-        }
+            // Check if we got a game entry back
+            if (jsonObj["response"].toObject().contains("jeu")) {
+                // Game found, stop retrying
+                jsonObj = jsonObj["response"].toObject()["jeu"].toObject();
 
-        // Check if user has exceeded daily request limit
-        if (!jsonObj["response"]
-                 .toObject()["ssuser"]
-                 .toObject()["requeststoday"]
-                 .toString()
-                 .isEmpty() &&
-            !jsonObj["response"]
-                 .toObject()["ssuser"]
-                 .toObject()["maxrequestsperday"]
-                 .toString()
-                 .isEmpty()) {
-            reqRemaining = jsonObj["response"]
-                               .toObject()["ssuser"]
-                               .toObject()["maxrequestsperday"]
-                               .toString()
-                               .toInt() -
-                           jsonObj["response"]
-                               .toObject()["ssuser"]
-                               .toObject()["requeststoday"]
-                               .toString()
-                               .toInt();
-            if (reqRemaining <= 0) {
-                ncprintf("\033[1;31mYour daily ScreenScraper request limit has "
-                         "been reached, exiting nicely...\033[0m\n\n");
+                GameEntry game;
+                game.title = getJsonText(jsonObj["noms"].toArray(), REGION);
+
+                // 'screenscraper' sometimes returns a faulty result with the following
+                // names. If we get either result DON'T use it. It will provide faulty data
+                // for the cache
+                if ((game.title.toLower().contains("hack") &&
+                     game.title.toLower().contains("link")) ||
+                    game.title.toLower() == "zzz" ||
+                    game.title.toLower().contains("notgame")) {
+                    return;
+                }
+
+                // If title still unset, no acceptable rom was found, so return with no
+                // results
+                if (game.title.isEmpty()) {
+                    return;
+                }
+
+                //backup json in /tmp to avoid to redownload later
+                // Wrap the object into a QJsonDocument
+                QJsonDocument doc(jsonObj);
+
+                 // Open the file for writing
+                QFile file(tmpJsonFilePath);
+                if (file.open(QIODevice::WriteOnly)) {
+                    // Write formatted/indented JSON (use QJsonDocument::Compact for smaller size)
+                    file.write(doc.toJson(QJsonDocument::Indented));
+                    file.close();
+                } else {
+                    qWarning() << "Failed to open file for writing:" << file.errorString();
+                }
+
+                game.url = gameUrl;
+                game.platform = jsonObj["systeme"].toObject()["text"].toString();
+                game.releaseDate = getJsonText(jsonObj["dates"].toArray(), REGION);
+
+                // Only check if platform is empty, it's always correct when using
+                // ScreenScraper
+                if (!game.platform.isEmpty()) {
+                    bool isDuplicate = !gameEntries.isEmpty() &&
+                                       gameEntries.last().title == game.title &&
+                                       gameEntries.last().platform == game.platform &&
+                                       gameEntries.last().releaseDate == game.releaseDate;
+                    if (!isDuplicate) {
+                        gameEntries.append(game);
+                    }
+                    break;
+                }
             }
         }
-
-        // Check if we got a game entry back
-        if (jsonObj["response"].toObject().contains("jeu")) {
-            // Game found, stop retrying
-            break;
-        }
-    }
-
-    jsonObj = jsonObj["response"].toObject()["jeu"].toObject();
-
-    GameEntry game;
-    game.title = getJsonText(jsonObj["noms"].toArray(), REGION);
-
-    // 'screenscraper' sometimes returns a faulty result with the following
-    // names. If we get either result DON'T use it. It will provide faulty data
-    // for the cache
-    if ((game.title.toLower().contains("hack") &&
-         game.title.toLower().contains("link")) ||
-        game.title.toLower() == "zzz" ||
-        game.title.toLower().contains("notgame")) {
-        return;
-    }
-
-    // If title still unset, no acceptable rom was found, so return with no
-    // results
-    if (game.title.isEmpty()) {
-        return;
-    }
-
-    game.url = gameUrl;
-    game.platform = jsonObj["systeme"].toObject()["text"].toString();
-    game.releaseDate = getJsonText(jsonObj["dates"].toArray(), REGION);
-
-    // Only check if platform is empty, it's always correct when using
-    // ScreenScraper
-    if (!game.platform.isEmpty()) {
-        gameEntries.append(game);
     }
 }
 

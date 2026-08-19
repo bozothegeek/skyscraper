@@ -209,9 +209,9 @@ void ScraperWorker::run() {
                        ((cachedGame.fanartFile == "") && (config.cacheFanarts || config.fanart)) ||
                        ((cachedGame.backcoverFile == "") && (config.cacheBackcovers || config.backcovers)) ||
                        ((cachedGame.videoFile == "") && (config.cacheVideos  || config.videos)) ){
-                            // need to scrap in this case also
-                            scraper->runPasses(gameEntries, info, output, debug);
-                            runPassed = true;
+                        // need to scrap in this case also
+                        scraper->runPasses(gameEntries, info, output, debug);
+                        runPassed = true;
                     }
                 }
             } else {
