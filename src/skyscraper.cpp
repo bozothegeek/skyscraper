@@ -123,7 +123,7 @@ void Skyscraper::run() {
     if (cacheScrapeMode && config.cacheOptions.isEmpty()) {
             ncprintf("Media folder:      '\033[1;32m%s\033[0m'\n",
                  PathTools::pathToStdStr(config.mediaFolder).c_str());
-            ncprintf("  Covers folder:   '├── \033[1;32m%s\033[0m'\n",
+            ncprintf("  Covers:          '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.coversFolder).c_str());
             ncprintf("  Screenshots:     '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.screenshotsFolder).c_str());
@@ -146,38 +146,38 @@ void Skyscraper::run() {
 
             ncprintf("  Wheels:          '├── \033[1;32m%s\033[0m'\n",
                  mediaSubFolderStdStr(config.wheelsFolder).c_str());
-        bool notLast = config.videos || config.manuals || config.backcovers ||
-                       config.fanart;
+        bool notLast = (config.videos || config.cacheVideos) || (config.manuals || config.cacheManuals) ||
+                           (config.backcovers || config.cacheBackcovers) || (config.fanart || config.cacheFanarts);
             ncprintf("  Marquees:        '%s── \033[1;32m%s\033[0m'\n",
                  notLast || !config.texturesFolder.isEmpty() ? "├" : "└",
                  mediaSubFolderStdStr(config.marqueesFolder).c_str());
         if (!config.texturesFolder.isEmpty()) {
-            ncprintf("  Textures:       '%s── \033[1;32m%s\033[0m'\n",
+            ncprintf("  Textures:        '%s── \033[1;32m%s\033[0m'\n",
                      notLast ? "├" : "└",
                      mediaSubFolderStdStr(config.texturesFolder).c_str());
         }
         if ((config.videos || config.cacheVideos) && !config.videosFolder.isEmpty()) {
             notLast = (config.manuals || config.cacheManuals) || (config.backcovers || config.cacheBackcovers) || (config.fanart || config.cacheFanarts);
-            ncprintf("  Videos:         '%s── \033[1;32m%s\033[0m'\n",
+            ncprintf("  Videos:          '%s── \033[1;32m%s\033[0m'\n",
                      notLast ? "├" : "└",
                      mediaSubFolderStdStr(config.videosFolder).c_str());
         }
         // config.*Folder are not empty on frontends supporting that media
         if ((config.manuals || config.cacheManuals) && !config.manualsFolder.isEmpty()) {
             notLast = (config.backcovers || config.cacheBackcovers) || (config.fanart || config.cacheFanarts);
-            ncprintf("  Manuals:        '%s── \033[1;32m%s\033[0m'\n",
+            ncprintf("  Manuals:         '%s── \033[1;32m%s\033[0m'\n",
                      notLast ? "├" : "└",
                      mediaSubFolderStdStr(config.manualsFolder).c_str());
         }
         if ((config.fanart || config.cacheFanarts) && !config.fanartsFolder.isEmpty()) {
             notLast = config.backcovers || config.cacheBackcovers;
-            ncprintf("  Fanarts:        '%s── \033[1;32m%s\033[0m'\n",
+            ncprintf("  Fanarts:         '%s── \033[1;32m%s\033[0m'\n",
                      notLast ? "├" : "└",
                      mediaSubFolderStdStr(config.fanartsFolder).c_str());
         }
         if ((config.backcovers || config.cacheBackcovers) && !config.backcoversFolder.isEmpty()) {
             notLast = false;
-            ncprintf("  Backcovers:     '%s── \033[1;32m%s\033[0m'\n",
+            ncprintf("  Backcovers:      '%s── \033[1;32m%s\033[0m'\n",
                      notLast ? "├" : "└",
                      mediaSubFolderStdStr(config.backcoversFolder).c_str());
         }
