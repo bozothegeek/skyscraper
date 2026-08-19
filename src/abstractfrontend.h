@@ -78,7 +78,7 @@ public:
     virtual QString getFanartsFolder() { return QString(); };
     virtual QString getBackcoversFolder() { return QString(); };
     virtual void sortEntries(QList<GameEntry> &gameEntries);
-    bool copyMedia(GameEntry::Types &, const QString &, const QString &,
+    virtual bool copyMedia(GameEntry::Types &, const QString &, const QString &,
                    GameEntry &);
 
 signals:

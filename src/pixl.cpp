@@ -1,16 +1,10 @@
-/***************************************************************************
- *            abstractfrontend.cpp
- *
- *  Wed Jun 18 12:00:00 CEST 2017
- *  Copyright 2017 Lars Muldjord
- *  muldjordlars@gmail.com
- ****************************************************************************/
 /*
  *  This file is part of skyscraper.
+ *  Copyright 2024 Gemba @ GitHub
  *
  *  skyscraper is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  skyscraper is distributed in the hope that it will be useful,
@@ -23,47 +17,69 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#include "abstractfrontend.h"
+#include "pixl.h"
 
-#include "gameentry.h"
 #include "pathtools.h"
 
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QStringBuilder>
+#include <QDebug>
+#include <QDir>
+#include <QProcessEnvironment>
+#include <QRegularExpression>
+#include <QStringBuilder>
+#include <QStringList>
+#include <QTemporaryFile>
+#include <QTextStream>
 
-AbstractFrontend::AbstractFrontend() {}
 
-AbstractFrontend::~AbstractFrontend() {}
+Pixl::Pixl() {}
 
-void AbstractFrontend::setConfig(Settings *config) { this->config = config; }
+static const QString baseFolder() { return QString("/recalbox/share/roms/"); }
 
-void AbstractFrontend::sortEntries(QList<GameEntry> &gameEntries) {
-    ncprintf("Sorting entries...");
-    int dots = 0;
-    std::sort(gameEntries.begin(), gameEntries.end(),
-              [&dots](const GameEntry a, const GameEntry b) -> bool {
-                  if (dots % 1000 == 0) {
-                      ncprintf(".");
-                      fflush(stdout);
-                  }
-                  dots++;
-                  QString firstTitle = a.title.toLower();
-                  QString secondTitle = b.title.toLower();
-                  if (firstTitle.left(4) == "the ") {
-                      firstTitle.remove(0, 4);
-                  }
-                  if (secondTitle.left(4) == "the ") {
-                      secondTitle.remove(0, 4);
-                  }
-
-                  return firstTitle < secondTitle;
-              });
-    ncprintf(" \033[1;32mDone!\033[0m\n");
+QStringList Pixl::extraGamelistTags(bool isFolder) {
+    (void)isFolder;
+    // does not require extra XML elements for the moment
+    return QStringList();
 }
 
-QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,
+QStringList Pixl::createEsVariantXml(const GameEntry &entry) {
+    QStringList l;
+    bool addEmptyElem = addEmptyElement() && !entry.isFolder;
+
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::COVER),
+                  entry.coverFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::THREEDCOVER),
+                  entry.threedcoverFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::FULLCOVER),
+                  entry.fullcoverFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::SCREENSHOT),
+                  entry.screenshotFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::SCREENSHOTTITLE),
+                  entry.screenshottitleFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::MARQUEE),
+                  entry.marqueeFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::WHEEL),
+                  entry.wheelFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::TEXTURE),
+                  entry.textureFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::VIDEO),
+                  entry.videoFile,addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::MANUAL),
+                  entry.manualFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::MAP),
+                  entry.mapFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::FANART),
+                  entry.fanartFile, addEmptyElem, true));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::BACKCOVER),
+                  entry.backcoverFile, addEmptyElem, true));
+
+    return l;
+}
+
+QString Pixl::getTargetFilePath(const GameEntry::Types t,
                                             const QString &baseName,
                                             const QString &subPath,
                                             const QString &cacheFn,
@@ -86,8 +102,14 @@ QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,
     case GameEntry::FANART:
         fp = getFanartsFolder();
         break;
+    case GameEntry::FULLCOVER:
+        fp = getFullcoversFolder();
+        break;
     case GameEntry::MANUAL:
         fp = getManualsFolder();
+        break;
+    case GameEntry::MAP:
+        fp = getMapsFolder();
         break;
     case GameEntry::MARQUEE:
         fp = getMarqueesFolder();
@@ -98,17 +120,11 @@ QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,
     case GameEntry::SCREENSHOTTITLE:
         fp = getScreenshottitlesFolder();
         break;
-    case GameEntry::THREEDCOVER:
-        fp = get3dcoversFolder();
-        break;
-    case GameEntry::FULLCOVER:
-        fp = getFullcoversFolder();
-        break;
-    case GameEntry::MAP:
-        fp = getMapsFolder();
-        break;
     case GameEntry::TEXTURE:
         fp = getTexturesFolder();
+        break;
+    case GameEntry::THREEDCOVER:
+        fp = get3dcoversFolder();
         break;
     case GameEntry::VIDEO:
         fp = getVideosFolder();
@@ -151,9 +167,9 @@ QString AbstractFrontend::getTargetFilePath(const GameEntry::Types t,
     return fp;
 }
 
-bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
-                                 const QString &baseName,
-                                 const QString &subPath, GameEntry &game) {
+bool Pixl::copyMedia(GameEntry::Types &savedMedia,
+                     const QString &baseName,
+                     const QString &subPath, GameEntry &game) {
     bool copyError = false;
     bool success = false;
     GameEntry::Types toCopy =
@@ -161,12 +177,30 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
 
     if (!config->backcovers && !config->cacheBackcovers)
         toCopy ^= GameEntry::BACKCOVER;
+    if (!config->cacheCovers)
+        toCopy ^= GameEntry::COVER;
     if (!config->fanart && !config->cacheFanarts)
         toCopy ^= GameEntry::FANART;
+    if (!config->cacheFullcovers)
+        toCopy ^= GameEntry::FULLCOVER;
     if (!config->manuals && !config->cacheManuals)
         toCopy ^= GameEntry::MANUAL;
+    if (!config->cacheMaps)
+        toCopy ^= GameEntry::MAP;
+    if (!config->cacheMarquees)
+        toCopy ^= GameEntry::MARQUEE;
+    if (!config->cacheScreenshots)
+        toCopy ^= GameEntry::SCREENSHOT;
+    if (!config->cacheScreenshottitles)
+        toCopy ^= GameEntry::SCREENSHOTTITLE;
+    if (!config->cacheTextures)
+        toCopy ^= GameEntry::TEXTURE;
+    if (!config->cache3dcovers)
+        toCopy ^= GameEntry::THREEDCOVER;
     if (!config->videos && !config->cacheVideos)
         toCopy ^= GameEntry::VIDEO;
+    if (!config->cacheWheels)
+        toCopy ^= GameEntry::WHEEL;
 
     qDebug() << "toCopy" << toCopy;
     QList<MediaProps> medias;
@@ -188,58 +222,25 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
                                   game.fanartFile, config->skipExistingFanart);
         medias.append(m);
     }
+    if (GameEntry::FULLCOVER & toCopy) {
+        MediaProps m = MediaProps(GameEntry::FULLCOVER, game.fullcoverData,
+                                  game.fullcoverFile, config->skipExistingFullcovers);
+        medias.append(m);
+    }
     if (GameEntry::MANUAL & toCopy) {
         MediaProps m = MediaProps(GameEntry::MANUAL, game.manualData,
                                   game.manualFile, config->skipExistingManuals);
         medias.append(m);
     }
-    if ((GameEntry::MARQUEE | GameEntry::WHEEL) & toCopy) {
-        if (config->frontend == "attractmode" ||
-            config->frontend == "pegasus") {
-            if (GameEntry::MARQUEE & toCopy && !game.marqueeFile.isEmpty() &&
-                !game.marqueeData.isEmpty()) {
-                MediaProps m =
-                    MediaProps(GameEntry::MARQUEE, game.marqueeData,
-                               game.marqueeFile, config->skipExistingMarquees);
-                medias.append(m);
-            }
-            if (GameEntry::WHEEL & toCopy && !game.wheelFile.isEmpty() &&
-                !game.wheelData.isEmpty()) {
-                MediaProps m =
-                    MediaProps(GameEntry::WHEEL, game.wheelData, game.wheelFile,
-                               config->skipExistingWheels);
-                medias.append(m);
-            }
-        } else if (!(toCopy & GameEntry::WHEEL) ||
-                   toCopy & GameEntry::MARQUEE) {
-            // copy only if marquee is set, but not if wheel is set alone:
-            // in the latter marquee contains already wheel data via
-            // artwork, that is a historical ES-theme misconception.
-            // PENDING: In a edge case when no marquee is defined in the artwork
-            // this assumption fails
-            bool putInGamelist = gamelistHasMediaPaths();
-            QString tgt;
-            if (!game.wheelFile.isEmpty() && !game.wheelData.isEmpty()) {
-                tgt = getTargetFilePath(GameEntry::MARQUEE, baseName, subPath,
-                                        game.wheelFile);
-                if (!tgt.isEmpty()) {
-                    success =
-                        doCopy(GameEntry::MARQUEE, game.wheelFile, tgt,
-                               game.wheelData, config->skipExistingMarquees);
-                    copyError |= !success;
-                    putInGamelist &= success;
-                }
-            }
-            if (!putInGamelist || tgt.isEmpty()) {
-                game.marqueeFile.clear();
-                game.marqueeData.clear();
-            } else {
-                game.marqueeFile = tgt;
-                // avoid output of wheel in gamelist
-                game.wheelFile.clear();
-                game.wheelData.clear();
-            }
-        }
+    if (GameEntry::MAP & toCopy) {
+        MediaProps m = MediaProps(GameEntry::MAP, game.mapData,
+                                  game.mapFile, config->skipExistingMaps);
+        medias.append(m);
+    }
+    if (GameEntry::MARQUEE & toCopy) {
+        MediaProps m = MediaProps(GameEntry::MARQUEE, game.marqueeData,
+                                  game.marqueeFile, config->skipExistingMarquees);
+        medias.append(m);
     }
     if (GameEntry::SCREENSHOT & toCopy) {
         MediaProps m =
@@ -259,18 +260,6 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
                        game.threedcoverFile, config->skipExisting3dcovers);
         medias.append(m);
     }
-    if (GameEntry::FULLCOVER & toCopy) {
-        MediaProps m =
-            MediaProps(GameEntry::FULLCOVER, game.fullcoverData,
-                       game.fullcoverFile, config->skipExistingFullcovers);
-        medias.append(m);
-    }
-    if (GameEntry::MAP & toCopy) {
-        MediaProps m =
-            MediaProps(GameEntry::MAP, game.mapData,
-                       game.mapFile, config->skipExistingMaps);
-        medias.append(m);
-    }
     if (GameEntry::TEXTURE & toCopy) {
         MediaProps m =
             MediaProps(GameEntry::TEXTURE, game.textureData, game.textureFile,
@@ -280,6 +269,12 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
     if (GameEntry::VIDEO & toCopy) {
         MediaProps m = MediaProps(GameEntry::VIDEO, game.videoData,
                                   game.videoFile, config->skipExistingVideos);
+        m.ext = game.videoFormat;
+        medias.append(m);
+    }
+    if (GameEntry::WHEEL & toCopy) {
+        MediaProps m = MediaProps(GameEntry::WHEEL, game.wheelData,
+                                  game.wheelFile, config->skipExistingWheels);
         m.ext = game.videoFormat;
         medias.append(m);
     }
@@ -315,22 +310,22 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
         game.coverFile.clear();
     if (drop & GameEntry::FANART)
         game.fanartFile.clear();
+    if (drop & GameEntry::FULLCOVER)
+        game.fullcoverFile.clear();
     if (drop & GameEntry::MANUAL)
         game.manualFile.clear();
+    if (drop & GameEntry::MAP)
+        game.mapFile.clear();
     if (drop & GameEntry::MARQUEE)
         game.marqueeFile.clear();
     if (drop & GameEntry::SCREENSHOT)
         game.screenshotFile.clear();
     if (drop & GameEntry::SCREENSHOTTITLE)
         game.screenshottitleFile.clear();
-    if (drop & GameEntry::THREEDCOVER)
-        game.threedcoverFile.clear();
-    if (drop & GameEntry::FULLCOVER)
-        game.fullcoverFile.clear();
-    if (drop & GameEntry::MAP)
-        game.mapFile.clear();
     if (drop & GameEntry::TEXTURE)
         game.textureFile.clear();
+    if (drop & GameEntry::THREEDCOVER)
+        game.threedcoverFile.clear();
     if (drop & GameEntry::VIDEO)
         game.videoFile.clear();
     if (drop & GameEntry::WHEEL)
@@ -339,7 +334,7 @@ bool AbstractFrontend::copyMedia(GameEntry::Types &savedMedia,
     return copyError;
 }
 
-bool AbstractFrontend::doCopy(GameEntry::Types t, const QString &cacheFn,
+bool Pixl::doCopy(GameEntry::Types t, const QString &cacheFn,
                               QString &tgt, const QByteArray &data,
                               bool skipExisting) {
     bool success = skipExisting;
@@ -397,7 +392,7 @@ bool AbstractFrontend::doCopy(GameEntry::Types t, const QString &cacheFn,
     return success;
 }
 
-QString AbstractFrontend::defaultMimeType(const QString &fn) {
+QString Pixl::defaultMimeType(const QString &fn) {
     QString ext = "png";
     if (fn.endsWith("-video"))
         ext = "mp4";
@@ -405,4 +400,80 @@ QString AbstractFrontend::defaultMimeType(const QString &fn) {
         ext = "pdf";
     qDebug() << "Using failsafe extension" << ext << "for" << fn;
     return ext;
+}
+
+
+QString Pixl::getInputFolder() {
+    if(config->inputFolder =="")
+        return baseFolder() % config->platform;
+    else
+        return config->inputFolder;
+}
+
+QString Pixl::getGameListFolder() {
+    return getInputFolder();
+}
+
+QString Pixl::getMediaFolder() {
+    return getInputFolder();
+}
+
+QString Pixl::getBackcoversFolder() {
+    return config->mediaFolder % "/backcovers";
+}
+
+QString Pixl::getCoversFolder() {
+    return config->mediaFolder % "/box2dfront";
+}
+
+QString Pixl::getFanartsFolder() {
+    return config->mediaFolder % "/fanart";
+}
+
+QString Pixl::getFullcoversFolder() {
+    return config->mediaFolder % "/boxtexture";
+}
+
+QString Pixl::getManualsFolder() {
+    return config->mediaFolder % "/manuals";
+}
+
+QString Pixl::getMapsFolder() {
+    return config->mediaFolder % "/map";
+}
+
+QString Pixl::getMarqueesFolder() {
+    return config->mediaFolder % "/marquee";
+}
+
+QString Pixl::getScreenshotsFolder() {
+    return config->mediaFolder % "/screenshot";
+}
+
+QString Pixl::getScreenshottitlesFolder() {
+    return config->mediaFolder % "/screenshottittle";
+}
+
+QString Pixl::getTexturesFolder() {
+    return config->mediaFolder % "/support";
+}
+
+QString Pixl::get3dcoversFolder() {
+    return config->mediaFolder % "/box3d";
+}
+
+QString Pixl::getVideosFolder() {
+    return config->mediaFolder % "/videos";
+}
+
+QString Pixl::getWheelsFolder() {
+    return config->mediaFolder % "/wheel";
+}
+
+GameEntry::Types Pixl::supportedMedia() {
+    return GameEntry::Types(GameEntry::BACKCOVER | GameEntry::COVER  | GameEntry::FANART | GameEntry::FULLCOVER |
+                            GameEntry::MANUAL | GameEntry::MAP | GameEntry::MARQUEE |
+                            GameEntry::SCREENSHOT | GameEntry::SCREENSHOTTITLE |
+                            GameEntry::TEXTURE | GameEntry::THREEDCOVER |
+                            GameEntry::VIDEO | GameEntry::WHEEL);
 }

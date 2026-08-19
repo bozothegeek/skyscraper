@@ -46,4 +46,5 @@
   <hint>You can disable the colored terminal output by setting NO_COLOR=1 as environment variable.</hint>
   <hint>You can validate your platforms definition file (peas_local.json) with the script peas_validate_with_json_schema.py of Skyscraper.</hint>
   <hint>Albet Einstein's birthdate was on the pi day (3/14/1879), Karl Marx died on the pi day of 1883.</hint>
+  <hint>Skyscraper supports the pixL OS Pegasus frontend xml gamelist format.</hint>
 </hints>

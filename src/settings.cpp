@@ -1043,7 +1043,7 @@ QStringList RuntimeCfg::parseFlags() {
 bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {
     QStringList frontends = {"emulationstation", "retrobat", "attractmode",
                              "pegasus",          "esde",     "batocera",
-                             "retroarch"};
+                             "retroarch", "pixl"};
     frontends.sort();
     if (!frontends.contains(providedFrontend)) {
         ncprintf(

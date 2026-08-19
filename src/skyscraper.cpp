@@ -36,6 +36,7 @@
 #include "nocolor.h"
 #include "pathtools.h"
 #include "pegasus.h"
+#include "pixl.h"
 #include "retroarch.h"
 #include "settings.h"
 #include "strtools.h"
@@ -1038,6 +1039,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
         fePtr = new Batocera();
     } else if (config.frontend == "retroarch") {
         fePtr = new RetroArch();
+    } else if (config.frontend == "pixl") {
+        fePtr = new Pixl();
     }
     if (fePtr != nullptr) {
         frontend = QSharedPointer<AbstractFrontend>(fePtr);

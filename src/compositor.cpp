@@ -432,7 +432,7 @@ GameEntry::Types Compositor::saveAll(GameEntry &game, QString completeBaseName,
             } else if (output.resType == "screenshottitle") {
                 game.screenshottitleFile = filename;
                 artworkBins |= GameEntry::Elem::SCREENSHOTTITLE;
-            } else if (output.resType == "threedcover") {
+            } else if (output.resType == "3dcover") {
                 game.threedcoverFile = filename;
                 artworkBins |= GameEntry::Elem::THREEDCOVER;
             } else if (output.resType == "fullcover") {

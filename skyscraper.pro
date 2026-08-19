@@ -58,7 +58,7 @@ unix:config.files=aliasMap.csv hints.xml mameMap.csv \
 unix:examples.path=$${SYSCONFDIR}/skyscraper
 unix:examples.files=config.ini.example README.md artwork.xml \
   artwork.xml.example1 artwork.xml.example2 artwork.xml.example3 \
-  artwork.xml.example4 batocera-artwork.xml retroarch-artwork.xml \
+  artwork.xml.example4 batocera-artwork.xml pixl-artwork.xml retroarch-artwork.xml \
   docs/ARTWORK.md docs/CACHE.md
 
 unix:cacheexamples.path=$${SYSCONFDIR}/skyscraper/cache
@@ -135,6 +135,7 @@ HEADERS += \
            src/openretro.h \
            src/pathtools.h \
            src/pegasus.h \
+           src/pixl.h \
            src/platform.h \
            src/queue.h \
            src/retroarch.h \
@@ -192,6 +193,7 @@ SOURCES += src/main.cpp \
            src/openretro.cpp \
            src/pathtools.cpp \
            src/pegasus.cpp \
+           src/pixl.cpp \
            src/platform.cpp \
            src/queue.cpp \
            src/retroarch.cpp \
@@ -206,3 +208,6 @@ SOURCES += src/main.cpp \
 
 SUBDIRS += \
     win32/skyscraper.pro
+
+DISTFILES += \
+    pixl-artwork.xml

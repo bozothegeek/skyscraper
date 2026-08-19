@@ -64,7 +64,7 @@ public:
     };
     Q_DECLARE_FLAGS(Types, Elem)
 
-    enum Format { RETROPIE, ESDE, BATOCERA, ATTRACT, PEGASUS, RETROARCH };
+    enum Format { RETROPIE, ESDE, BATOCERA, ATTRACT, PEGASUS, RETROARCH, PIXL };
 
     static constexpr GameEntry::Types MEDIA =
         GameEntry::Types(BACKCOVER | COVER | FANART | MANUAL | MARQUEE |
@@ -93,18 +93,18 @@ public:
                                      {AGES, "kidgame"},
                                      {TITLE, "name"},
                                      {TEXTURE, "texture"},
-                                     // ES (variants), ES-DE and Batocera
+                                     // ES (variants), ES-DE, Batocera and pixL
                                      {MANUAL, "manual"},
                                      {FANART, "fanart"},
                                      // Batocera: Part of Gamelist
                                      // ES variants: maybe part of Gamelist
                                      // ES-DE: Only in filesystem
                                      {BACKCOVER, "boxback"},
-									 // Pixl: Part of Gamelit
-									 {SCREENSHOTTITLE, "screenshottitle"},
-                                                                         {THREEDCOVER, "threedcover"},
-									 {FULLCOVER, "fullcover"},
-									 {MAP, "map"}};
+                                     // Pixl: Part of Gamelit
+                                     {SCREENSHOTTITLE, "screenshottitle"},
+                                     {THREEDCOVER, "3dcover"},
+                                     {FULLCOVER, "fullcover"},
+                                     {MAP, "map"}};
         return m;
     };
 

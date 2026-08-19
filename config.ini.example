@@ -209,3 +209,6 @@ artworkXml="batocera-artwork.xml"
 inputFolder="."
 mediaFolder="."
 ;videos="true"
+
+[pixl]
+artworkXml="pixl-artwork.xml"
