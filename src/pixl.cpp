@@ -49,32 +49,122 @@ QStringList Pixl::createEsVariantXml(const GameEntry &entry) {
     QStringList l;
     bool addEmptyElem = addEmptyElement() && !entry.isFolder;
 
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::COVER),
-                  entry.coverFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::THREEDCOVER),
-                  entry.threedcoverFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::FULLCOVER),
-                  entry.fullcoverFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::SCREENSHOT),
-                  entry.screenshotFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::SCREENSHOTTITLE),
-                  entry.screenshottitleFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::MARQUEE),
-                  entry.marqueeFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::WHEEL),
-                  entry.wheelFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::TEXTURE),
-                  entry.textureFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::VIDEO),
-                  entry.videoFile,addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::MANUAL),
-                  entry.manualFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::MAP),
-                  entry.mapFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::FANART),
-                  entry.fanartFile, addEmptyElem, true));
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::BACKCOVER),
-                  entry.backcoverFile, addEmptyElem, true));
+    // BACKCOVER
+    if (!config->xmlTagBackcovers.isEmpty()) {
+        if (config->xmlTagBackcovers != "false") {
+            l.append(elem(config->xmlTagBackcovers, entry.backcoverFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::BACKCOVER), entry.backcoverFile, addEmptyElem, true));
+    }
+
+    // COVER
+    if (!config->xmlTagCovers.isEmpty()) {
+        if (config->xmlTagCovers != "false") {
+            l.append(elem(config->xmlTagCovers, entry.coverFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::COVER), entry.coverFile, addEmptyElem, true));
+    }
+
+    // FANART
+    if (!config->xmlTagFanarts.isEmpty()) {
+        if (config->xmlTagFanarts != "false") {
+            l.append(elem(config->xmlTagFanarts, entry.fanartFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::FANART), entry.fanartFile, addEmptyElem, true));
+    }
+
+    // FULLCOVER
+    if (!config->xmlTagFullcovers.isEmpty()) {
+        if (config->xmlTagFullcovers != "false") {
+            l.append(elem(config->xmlTagFullcovers, entry.fullcoverFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::FULLCOVER), entry.fullcoverFile, addEmptyElem, true));
+    }
+
+    // MANUAL
+    if (!config->xmlTagManuals.isEmpty()) {
+        if (config->xmlTagManuals != "false") {
+            l.append(elem(config->xmlTagManuals, entry.manualFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::MANUAL), entry.manualFile, addEmptyElem, true));
+    }
+
+    // MAP
+    if (!config->xmlTagMaps.isEmpty()) {
+        if (config->xmlTagMaps != "false") {
+            l.append(elem(config->xmlTagMaps, entry.mapFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::MAP), entry.mapFile, addEmptyElem, true));
+    }
+
+    // MARQUEE
+    if (!config->xmlTagMarquees.isEmpty()) {
+        if (config->xmlTagMarquees != "false") {
+            l.append(elem(config->xmlTagMarquees, entry.marqueeFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::MARQUEE), entry.marqueeFile, addEmptyElem, true));
+    }
+
+    // SCREENSHOT
+    if (!config->xmlTagScreenshots.isEmpty()) {
+        if (config->xmlTagScreenshots != "false") {
+            l.append(elem(config->xmlTagScreenshots, entry.screenshotFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::SCREENSHOT), entry.screenshotFile, addEmptyElem, true));
+    }
+
+    // SCREENSHOTTITLE
+    if (!config->xmlTagScreenshottitles.isEmpty()) {
+        if (config->xmlTagScreenshottitles != "false") {
+            l.append(elem(config->xmlTagScreenshottitles, entry.screenshottitleFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::SCREENSHOTTITLE), entry.screenshottitleFile, addEmptyElem, true));
+    }
+
+    // TEXTURE
+    if (!config->xmlTagTextures.isEmpty()) {
+        if (config->xmlTagTextures != "false") {
+            l.append(elem(config->xmlTagTextures, entry.textureFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::TEXTURE), entry.textureFile, addEmptyElem, true));
+    }
+
+    // THREEDCOVER
+    if (!config->xmlTag3dcovers.isEmpty()) {
+        if (config->xmlTag3dcovers != "false") {
+            l.append(elem(config->xmlTag3dcovers, entry.threedcoverFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::THREEDCOVER), entry.threedcoverFile, addEmptyElem, true));
+    }
+
+    // VIDEO
+    if (!config->xmlTagVideos.isEmpty()) {
+        if (config->xmlTagVideos != "false") {
+            l.append(elem(config->xmlTagVideos, entry.videoFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::VIDEO), entry.videoFile, addEmptyElem, true));
+    }
+
+    // WHEEL
+    if (!config->xmlTagWheels.isEmpty()) {
+        if (config->xmlTagWheels != "false") {
+            l.append(elem(config->xmlTagWheels, entry.wheelFile, addEmptyElem, true));
+        }
+    } else {
+        l.append(elem(GameEntry::getTag(GameEntry::Elem::WHEEL), entry.wheelFile, addEmptyElem, true));
+    }
 
     return l;
 }
@@ -175,31 +265,43 @@ bool Pixl::copyMedia(GameEntry::Types &savedMedia,
     GameEntry::Types toCopy =
         supportedMedia() & (savedMedia ^ GameEntry::MEDIA);
 
-    if (!config->backcovers && !config->cacheBackcovers)
+    if ((!config->backcovers && !config->cacheBackcovers) || (config->xmlTagBackcovers == "false"))
         toCopy ^= GameEntry::BACKCOVER;
-    if (!config->cacheCovers)
+
+    if (!config->cacheCovers || (config->xmlTagCovers == "false"))
         toCopy ^= GameEntry::COVER;
-    if (!config->fanart && !config->cacheFanarts)
+
+    if ((!config->fanart && !config->cacheFanarts) || (config->xmlTagFanarts == "false"))
         toCopy ^= GameEntry::FANART;
-    if (!config->cacheFullcovers)
+
+    if (!config->cacheFullcovers || (config->xmlTagFullcovers == "false"))
         toCopy ^= GameEntry::FULLCOVER;
-    if (!config->manuals && !config->cacheManuals)
+
+    if ((!config->manuals && !config->cacheManuals) || (config->xmlTagManuals == "false"))
         toCopy ^= GameEntry::MANUAL;
-    if (!config->cacheMaps)
+
+    if (!config->cacheMaps || (config->xmlTagMaps == "false"))
         toCopy ^= GameEntry::MAP;
-    if (!config->cacheMarquees)
+
+    if (!config->cacheMarquees || (config->xmlTagMarquees == "false"))
         toCopy ^= GameEntry::MARQUEE;
-    if (!config->cacheScreenshots)
+
+    if (!config->cacheScreenshots || (config->xmlTagScreenshots == "false"))
         toCopy ^= GameEntry::SCREENSHOT;
-    if (!config->cacheScreenshottitles)
+
+    if (!config->cacheScreenshottitles || (config->xmlTagScreenshottitles == "false"))
         toCopy ^= GameEntry::SCREENSHOTTITLE;
-    if (!config->cacheTextures)
+
+    if (!config->cacheTextures || (config->xmlTagTextures == "false"))
         toCopy ^= GameEntry::TEXTURE;
-    if (!config->cache3dcovers)
+
+    if (!config->cache3dcovers || (config->xmlTag3dcovers == "false"))
         toCopy ^= GameEntry::THREEDCOVER;
-    if (!config->videos && !config->cacheVideos)
+
+    if ((!config->videos && !config->cacheVideos) || (config->xmlTagVideos == "false"))
         toCopy ^= GameEntry::VIDEO;
-    if (!config->cacheWheels)
+
+    if (!config->cacheWheels || (config->xmlTagWheels == "false"))
         toCopy ^= GameEntry::WHEEL;
 
     qDebug() << "toCopy" << toCopy;

@@ -211,4 +211,30 @@ mediaFolder="."
 ;videos="true"
 
 [pixl]
+;the pixl-artwork is not set for the moment but ready to be used and activated to avoid to have default behavior impacting screenshots
 artworkXml="pixl-artwork.xml"
+; The following parameters are to be able to customize XML tags in pixL gamelists for Themes.
+; How it works ?
+; if 'commented' (default Skraper tag value is used and media is copied)
+; if uncommented with a value (Tag value declared is used and media is copied)
+; if uncomment but set to "false"(no tag is generated in xml gamlist and no media copied)
+; The 3 "minimal" medias as used historically (as Screenscraper/Recalbox)
+xmlTagVideos="video"
+xmlTagTextures="image"
+xmlTagScreenshots="thumbnail"
+; The 2 "additional adviced" for "nice" display in gameOS pixL theme
+xmlTagFanarts="fanart"
+xmlTagWheels="wheel"
+; The one for "arcade" systems and display in favorite bar of gameOS pixL theme
+xmlTagMarquees="marquee"
+; The others medias that could be use as "BoxArt" image usually in gameOS pixL theme
+xmlTag3dcovers="box3d"
+xmlTagCovers="box2dfront"
+; The one to display your box in a 3D animated
+xmlTagFullcovers="boxtexture"
+; The "retrogaming" ones
+xmlTagManuals="manual"
+xmlTagMaps="map"
+; The "fanatics" one ;-) set to "false" by default
+xmlTagBackcovers="false"
+xmlTagScreenshottitles="false"

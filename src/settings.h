@@ -189,6 +189,33 @@ struct Settings {
 
     QList<QString> regionPrios;
     QList<QString> langPrios;
+
+    // The following parameters are to be able to customize XML tags in pixL gamelists for Themes.
+    // How it works ?
+    // if 'commented' (default Skraper tag value is used and media is copied)
+    // if uncommented with a value (Tag value declared is used and media is copied)
+    // if uncomment but not set (no tag is generated in xml gamlist and no media copied)
+    // The 3 "minimal" medias as used historically (as Screenscraper/Recalbox)
+    QString xmlTagVideos="video";
+    QString xmlTagTextures="image";
+    QString xmlTagScreenshots="thumbnail";
+    // The 2 "additional adviced" for "nice" display in gameOS pixL theme
+    QString xmlTagFanarts="fanart";
+    QString xmlTagWheels="wheel";
+    // The one for "arcade" systems and display in favorite bar of gameOS pixL theme
+    QString xmlTagMarquees="marquee";
+    // The others medias that could be use as "BoxArt" image usually in gameOS pixL theme
+    QString xmlTag3dcovers="box3d";
+    QString xmlTagCovers="box2dfront";
+    // The one to display your box in a 3D animated
+    QString xmlTagFullcovers="boxtexture";
+    // The "retrogaming" ones
+    QString xmlTagManuals="manual";
+    QString xmlTagMaps="map";
+    // The "fanatics" one ;-) set to "" by default
+    QString xmlTagBackcovers="";
+    QString xmlTagScreenshottitles="";
+
 };
 
 class RuntimeCfg : public QObject {
@@ -243,7 +270,7 @@ private:
         {"cacheResize",             QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheScreenshots",        QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheScreenshottitles",   QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
-        {"cache3dcovers",		    QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"cache3dcovers",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheFullcovers",         QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheMaps",               QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
         {"cacheTextures",           QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
@@ -315,7 +342,20 @@ private:
         {"videoConvertExtension",   QPair<QString, int>("str",  CfgType::MAIN |                                         CfgType::SCRAPER )},
         {"videoPreferNormalized",   QPair<QString, int>("bool",                                                         CfgType::SCRAPER )},
         {"videos",                  QPair<QString, int>("bool", CfgType::MAIN | CfgType::PLATFORM | CfgType::FRONTEND | CfgType::SCRAPER )},
-        {"videoSizeLimit",          QPair<QString, int>("int",  CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )}
+        {"videoSizeLimit",          QPair<QString, int>("int",  CfgType::MAIN | CfgType::PLATFORM |                     CfgType::SCRAPER )},
+        {"xmlTagVideos",            QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagTextures",          QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagScreenshots",       QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagFanarts",           QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagWheels",            QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagMarquees",          QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTag3dcovers",          QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagCovers",            QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagFullcovers",        QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagManuals",           QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagMaps",              QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagBackcovers",        QPair<QString, int>("str",                                      CfgType::FRONTEND                    )},
+        {"xmlTagScreenshottitles",  QPair<QString, int>("str",                                      CfgType::FRONTEND                    )}
         // clang-format on
     };
 };

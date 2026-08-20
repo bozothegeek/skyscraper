@@ -420,6 +420,58 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                     parseExtensions(v).replace("*.", "");
                 continue;
             }
+            if (k == "xmlTagVideos") {
+                config->xmlTagVideos = v;
+                continue;
+            }
+            if (k == "xmlTagTextures") {
+                config->xmlTagTextures = v;
+                continue;
+            }
+            if (k == "xmlTagScreenshots") {
+                config->xmlTagScreenshots = v;
+                continue;
+            }
+            if (k == "xmlTagFanarts") {
+                config->xmlTagFanarts = v;
+                continue;
+            }
+            if (k == "xmlTagWheels") {
+                config->xmlTagWheels = v;
+                continue;
+            }
+            if (k == "xmlTagMarquees") {
+                config->xmlTagMarquees = v;
+                continue;
+            }
+            if (k == "xmlTag3dcovers") {
+                config->xmlTag3dcovers = v;
+                continue;
+            }
+            if (k == "xmlTagCovers") {
+                config->xmlTagCovers = v;
+                continue;
+            }
+            if (k == "xmlTagFullcovers") {
+                config->xmlTagFullcovers = v;
+                continue;
+            }
+            if (k == "xmlTagManuals") {
+                config->xmlTagManuals = v;
+                continue;
+            }
+            if (k == "xmlTagMaps") {
+                config->xmlTagMaps = v;
+                continue;
+            }
+            if (k == "xmlTagBackcovers") {
+                config->xmlTagBackcovers = v;
+                continue;
+            }
+            if (k == "xmlTagScreenshottitles") {
+                config->xmlTagScreenshottitles = v;
+                continue;
+            }
         } else if (conv == "bool") {
             bool v = ss.toBool();
             if (k == "brackets") {

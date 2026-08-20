@@ -537,7 +537,7 @@ void ScreenScraper::getScreenshot(GameEntry &game) {
 void ScreenScraper::getScreenshotTitle(GameEntry &game) {
     QString url = getJsonText(jsonObj["medias"].toArray(), REGION,
                               QList<QString>({"sstitle"}));
-    game.screenshotData = downloadImageWithRetry(url);
+    game.screenshottitleData = downloadImageWithRetry(url);
 }
 
 void ScreenScraper::getthreedcover(GameEntry &game) {
