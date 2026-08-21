@@ -48,19 +48,19 @@ public:
         RATING = 0x80,
         AGES = 0x100,
         COVER = 0x200,
-        THREEDCOVER = 0x300,
         SCREENSHOT = 0x400,
-        SCREENSHOTTITLE = 0x500,
         WHEEL = 0x800,
         MARQUEE = 0x1000,
         TEXTURE = 0x2000,
-        FULLCOVER = 0x3000,
         VIDEO = 0x4000,
         MANUAL = 0x8000,
-		MAP = 0x9000,
         FANART = 0x10000,
         BACKCOVER = 0x20000,
-        ALL = (BACKCOVER << 1) - 1
+        SCREENSHOTTITLE = 0x40000,
+        THREEDCOVER = 0x80000,
+        FULLCOVER = 0x100000,
+        MAP = 0x200000,
+        ALL = (MAP << 1) - 1
     };
     Q_DECLARE_FLAGS(Types, Elem)
 
