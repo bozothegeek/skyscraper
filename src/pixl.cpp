@@ -153,13 +153,10 @@ QString Pixl::createXml(GameEntry &entry) {
     l.append(elem("path", entry.path, addEmptyElem));
     l.append(elem(GameEntry::getTag(GameEntry::Elem::TITLE), entry.title,
                   addEmptyElem));
-
-    l += createEsVariantXml(entry);
-
-    l.append(elem(GameEntry::getTag(GameEntry::Elem::RATING), entry.rating,
-                  addEmptyElem));
     l.append(elem(GameEntry::getTag(GameEntry::Elem::DESCRIPTION),
                   StrTools::shortenText(entry.description, config->maxLength),
+                  addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::RATING), entry.rating,
                   addEmptyElem));
 
     QString released = entry.releaseDate;
@@ -193,6 +190,9 @@ QString Pixl::createXml(GameEntry &entry) {
     }
 
     l.append(elem(tagKidgame, kidGame, false));
+
+    //especially for media
+    l += createEsVariantXml(entry);
 
     QString outerElemName = REGEX_OPENELEM.match(l[0]).captured(1);
     l.append(QString(INDENT % "</%1>").arg(outerElemName));
