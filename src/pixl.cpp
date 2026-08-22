@@ -113,12 +113,12 @@ void Pixl::assembleList(QString &finalOutput, QList<GameEntry> &gameEntries) {
 
     finalOutput.append("<?xml version=\"1.0\"?>\n" /* TODO: xmlPreamble() per frontend resp. with flag for ' encoding="UTF-8"' */);
     finalOutput.append(taintGamelist());
-    finalOutput.append("<gameList>\n");
-    finalOutput.append("  <provider>\n");
-    finalOutput.append(QString("    <System>%1</System>\n").arg(config->platform));
-    finalOutput.append("    <software>skyscraper</software>\n");
-    finalOutput.append(QString("    <database>%1</database>\n").arg(config->scraper));
+    finalOutput.append("<provider>\n");
+    finalOutput.append(QString("  <system>%1</system>\n").arg(config->platform));
+    finalOutput.append(QString("  <software>skyscraper %1</software>\n").arg(VERSION));
+    finalOutput.append(QString("  <database>%1</database>\n").arg(config->scraper));
     finalOutput.append("</provider>\n");
+    finalOutput.append("<gameList>\n");
     for (auto &entry : gameEntries) {
         if (++dots % dotMod == 0) {
             ncprintf(".");
