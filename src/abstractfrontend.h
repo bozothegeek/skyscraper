@@ -98,13 +98,14 @@ protected:
     QList<GameEntry> oldEntries;
     QMimeDatabase mimeDb;
 
+    bool doCopy(GameEntry::Types t, const QString &src, QString &tgt,
+                        const QByteArray &data, bool skipExisting);
+    QString defaultMimeType(const QString &fn);
+
 private:
-    QString getTargetFilePath(GameEntry::Types t, const QString &baseName,
+    virtual QString getTargetFilePath(GameEntry::Types t, const QString &baseName,
                               const QString &subPath, const QString &cacheFn,
                               QString ext = "");
-    bool doCopy(GameEntry::Types t, const QString &src, QString &tgt,
-                const QByteArray &data, bool skipExisting);
-    QString defaultMimeType(const QString &fn);
 };
 
 #endif // ABSTRACTFRONTEND_H

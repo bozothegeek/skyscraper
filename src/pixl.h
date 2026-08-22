@@ -50,20 +50,18 @@ public:
     bool copyMedia(GameEntry::Types &savedMedia,
                          const QString &baseName,
                          const QString &subPath, GameEntry &game) override;
+    void assembleList(QString &finalOutput, QList<GameEntry> &gameEntries) override;
 
 protected:
     QStringList createEsVariantXml(const GameEntry &entry) override;
-    QStringList extraGamelistTags(bool isFolder) override;
     GameEntry::Types supportedMedia() override;
     bool addEmptyElement() override { return false; };
+    QString createXml(GameEntry &entry) override;
 
 private:
     QString getTargetFilePath(GameEntry::Types t, const QString &baseName,
                                       const QString &subPath, const QString &cacheFn,
-                                      QString ext = "");
-    bool doCopy(GameEntry::Types t, const QString &src, QString &tgt,
-                        const QByteArray &data, bool skipExisting);
-    QString defaultMimeType(const QString &fn);
+                                      QString ext = "") override;
 };
 
 #endif // PIXL_H

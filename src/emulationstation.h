@@ -74,12 +74,6 @@ protected:
     // ES-DE may return <alternativeEmulator/> element
     virtual QString taintGamelist() { return ""; };
 
-private:
-    QString createXml(GameEntry &entry);
-    bool isGameLauncher(QString &sub);
-    void addFolder(QString &base, QString sub, QList<GameEntry> &added);
-    bool existingInGamelist(GameEntry &entry);
-
     const inline QRegularExpression isoTimeRe() const {
         return QRegularExpression("(^$|T[0-9]{6}$)");
     }
@@ -87,6 +81,14 @@ private:
         return Platform::get().getFormats(config->platform, config->extensions,
                                           config->addExtensions);
     }
+
+    virtual QString createXml(GameEntry &entry);
+    virtual void addFolder(QString &base, QString sub, QList<GameEntry> &added);
+    virtual bool isGameLauncher(QString &sub);
+    virtual bool existingInGamelist(GameEntry &entry);
+
+private:
+
 };
 
 #endif // EMULATIONSTATION_H

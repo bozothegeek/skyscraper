@@ -19,7 +19,9 @@
 
 #include "pixl.h"
 
+#include "gameentry.h"
 #include "pathtools.h"
+#include "strtools.h"
 
 #include <QDebug>
 #include <QDir>
@@ -34,15 +36,169 @@
 #include <QTemporaryFile>
 #include <QTextStream>
 
+static const QRegularExpression REGEX_OPENELEM =
+    QRegularExpression("<(\\w+)[\\s>]");
 
 Pixl::Pixl() {}
 
 static const QString baseFolder() { return QString("/recalbox/share/roms/"); }
 
-QStringList Pixl::extraGamelistTags(bool isFolder) {
-    (void)isFolder;
-    // does not require extra XML elements for the moment
-    return QStringList();
+void Pixl::assembleList(QString &finalOutput, QList<GameEntry> &gameEntries) {
+    QString extensions = platformFileExtensions();
+    // Check if the platform has both cue and bin extensions. Remove
+    // bin if it does to avoid count() below to be 2. I thought
+    // about removing bin extensions entirely from platform.cpp, but
+    // I assume I've added them per user request at some point.
+    bool cueSuffix = false;
+    if (extensions.contains("*.cue")) {
+        cueSuffix = true;
+        if (extensions.contains("*.bin")) {
+            extensions.replace("*.bin", "");
+            extensions = extensions.simplified();
+        }
+    }
+
+    QList<GameEntry> added;
+    QDir inputDir = QDir(config->inputFolder);
+
+    for (auto &entry : gameEntries) {
+        if (config->platform == "daphne") {
+            // 'daphne/roms/yadda_yadda.zip' -> 'daphne/yadda_yadda.daphne'
+            entry.path.replace("daphne/roms/", "daphne/")
+                .replace(".zip", ".daphne");
+            continue;
+        }
+        if (config->platform == "scummvm") {
+            // entry.path is file folder on fs with valid extension -> keep as
+            // game entry
+            // RetroPie/roms/scummvm/blarf.svm/ -> as <game/>
+            QFileInfo entryInfo(entry.path);
+            if (entryInfo.isDir() &&
+                extensions.contains("*." % entryInfo.suffix().toLower())) {
+                qDebug()
+                    << entry.path
+                    << "marked as <game/> albeit being a filesystem folder";
+                continue;
+            }
+        }
+        QFileInfo entryInfo(entry.path);
+        // always use absolute file path to ROM
+        entry.path = entryInfo.absoluteFilePath();
+
+               // Check if path is exactly one subfolder beneath root platform
+               // folder (has one more '/') and uses *.cue suffix
+        QString entryDir = entryInfo.absolutePath();
+        if (cueSuffix &&
+            entryDir.count("/") == config->inputFolder.count("/") + 1) {
+            // Check if subfolder has exactly one ROM, in which case we
+            // use <folder>
+            if (QDir(entryDir, extensions).count() == 1) {
+                entry.isFolder = true;
+                entry.path = entryDir;
+            }
+        }
+
+               // inputDir is absolute (cf. Skyscraper::run())
+        QString subPath = inputDir.relativeFilePath(entryDir);
+        if (subPath != ".") {
+            // <folder> element(s) are needed
+            addFolder(config->inputFolder, subPath, added);
+        }
+    }
+
+    gameEntries.append(added);
+
+    int dots = -1;
+    int dotMod = 1 + gameEntries.length() * 0.1;
+
+    finalOutput.append("<?xml version=\"1.0\"?>\n" /* TODO: xmlPreamble() per frontend resp. with flag for ' encoding="UTF-8"' */);
+    finalOutput.append(taintGamelist());
+    finalOutput.append("<gameList>\n");
+    finalOutput.append("  <provider>\n");
+    finalOutput.append(QString("    <System>%1</System>\n").arg(config->platform));
+    finalOutput.append("    <software>skyscraper</software>\n");
+    finalOutput.append(QString("    <database>%1</database>\n").arg(config->scraper));
+    finalOutput.append("</provider>\n");
+    for (auto &entry : gameEntries) {
+        if (++dots % dotMod == 0) {
+            ncprintf(".");
+            fflush(stdout);
+        }
+
+        if (entry.isFolder && !config->addFolders &&
+            !existingInGamelist(entry)) {
+            qDebug() << "addFolders is false, directory not added (but may be "
+                        "preserved): "
+                     << entry.path;
+            continue;
+        }
+
+        preserveFromOld(entry);
+
+        if (config->relativePaths) {
+            entry.path = "./" + PathTools::lexicallyRelativePath(
+                                    config->inputFolder, entry.path);
+        }
+        finalOutput.append(createXml(entry));
+    }
+    finalOutput.append("</gameList>\n");
+}
+
+
+QString Pixl::createXml(GameEntry &entry) {
+    QStringList l;
+    bool addEmptyElem = addEmptyElement() && !entry.isFolder;
+    l.append(openingElement(entry));
+
+    l.append(elem("path", entry.path, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::TITLE), entry.title,
+                  addEmptyElem));
+
+    l += createEsVariantXml(entry);
+
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::RATING), entry.rating,
+                  addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::DESCRIPTION),
+                  StrTools::shortenText(entry.description, config->maxLength),
+                  addEmptyElem));
+
+    QString released = entry.releaseDate;
+    QRegularExpressionMatch m = isoTimeRe().match(released);
+    if (!m.hasMatch()) {
+        released = released % "T000000";
+    }
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::RELEASEDATE), released,
+                  addEmptyElem));
+
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::DEVELOPER),
+                  entry.developer, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::PUBLISHER),
+                  entry.publisher, addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::TAGS), entry.tags,
+                  addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::PLAYERS), entry.players,
+                  addEmptyElem));
+
+           // write out non scraped elements
+    const QString tagKidgame = GameEntry::getTag(GameEntry::Elem::AGES);
+    for (const auto &t : extraGamelistTags(entry.isFolder)) {
+        if (t != tagKidgame) {
+            l.append(elem(t, entry.getEsExtra(t), false));
+        }
+    }
+    QString kidGame = entry.getEsExtra(tagKidgame);
+    if (kidGame.isEmpty() && entry.ages.toInt() >= 1 &&
+        entry.ages.toInt() <= 10) {
+        kidGame = "true";
+    }
+
+    l.append(elem(tagKidgame, kidGame, false));
+
+    QString outerElemName = REGEX_OPENELEM.match(l[0]).captured(1);
+    l.append(QString(INDENT % "</%1>").arg(outerElemName));
+    l.removeAll("");
+
+    return l.join("\n") % "\n";
 }
 
 QStringList Pixl::createEsVariantXml(const GameEntry &entry) {
@@ -435,75 +591,6 @@ bool Pixl::copyMedia(GameEntry::Types &savedMedia,
 
     return copyError;
 }
-
-bool Pixl::doCopy(GameEntry::Types t, const QString &cacheFn,
-                              QString &tgt, const QByteArray &data,
-                              bool skipExisting) {
-    bool success = skipExisting;
-    QString altTgt = tgt;
-    if (t & GameEntry::IMAGE) {
-        // depending on source it may have PNG or JPG
-        // format: prepare remove potential leftovers from other source too
-        if (tgt.endsWith(".jpg")) {
-            altTgt = altTgt.replace(altTgt.length() - 3, 3, "png");
-        } else if (tgt.endsWith(".png")) {
-            altTgt = altTgt.replace(altTgt.length() - 3, 3, "jpg");
-        }
-    }
-    if (!(skipExisting && (QFile::exists(tgt) || QFile::exists(altTgt)))) {
-        QFile::remove(tgt);
-        if (GameEntry::Elem::VIDEO & t) {
-            if (config->symlink) {
-                // symlink
-                if (success = QFile::link(cacheFn, tgt); !success) {
-                    qWarning() << "Symlink failed, media entry will be not in "
-                                  "game list:"
-                               << tgt << "->" << cacheFn;
-                }
-            } else {
-                if (success = QFile::copy(cacheFn, tgt); !success) {
-                    qWarning() << "Copy video failed, entry will be not in "
-                                  "game list:"
-                               << cacheFn << "to" << tgt;
-                }
-            }
-        } else {
-            if (t & GameEntry::IMAGE) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-                bool diff = tgt.last(3) != altTgt.last(3);
-#else
-                bool diff = tgt.right(3) != altTgt.right(3);
-#endif
-                if (diff)
-                    QFile::remove(altTgt);
-            }
-            QFile fh(tgt);
-            if (success = fh.open(QIODevice::WriteOnly); success) {
-                fh.write(data);
-                fh.close();
-            } else {
-                qWarning()
-                    << "Copy failed, media entry will be not in game list:"
-                    << cacheFn << "to" << tgt;
-            }
-        }
-    }
-    if (success) {
-        qDebug() << "Copied" << t;
-    }
-    return success;
-}
-
-QString Pixl::defaultMimeType(const QString &fn) {
-    QString ext = "png";
-    if (fn.endsWith("-video"))
-        ext = "mp4";
-    else if (fn.endsWith("-manual"))
-        ext = "pdf";
-    qDebug() << "Using failsafe extension" << ext << "for" << fn;
-    return ext;
-}
-
 
 QString Pixl::getInputFolder() {
     if(config->inputFolder =="")
