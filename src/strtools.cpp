@@ -204,6 +204,7 @@ QString StrTools::conformAges(QString str) {
         {"Adults Only", "18"},
         {"M - Mature", "18"},
         {"Mature", "18"},
+        {"+3 ans", "3"},
     };
 
     QMapIterator<QString, QString> i(ageMap);

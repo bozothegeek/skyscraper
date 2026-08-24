@@ -410,6 +410,7 @@ void ScreenScraper::getAges(GameEntry &game) {
     ageBoards.append("PEGI");
     ageBoards.append("ESRB");
     ageBoards.append("SS");
+    ageBoards.append("JV");
 
     if (!jsonObj["classifications"].isArray()) {
         return;
