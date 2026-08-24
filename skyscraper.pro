@@ -91,6 +91,7 @@ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 include(win32/skyscraper.pro)
 
 HEADERS += \
+           src/ZipCrcReader.h \
            src/abstractfrontend.h \
            src/abstractscraper.h \
            src/arcadedb.h \
@@ -149,6 +150,7 @@ HEADERS += \
            src/zxinfodk.h
 
 SOURCES += src/main.cpp \
+           src/ZipCrcReader.cpp \
            src/abstractfrontend.cpp \
            src/abstractscraper.cpp \
            src/arcadedb.cpp \
