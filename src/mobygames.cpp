@@ -157,7 +157,7 @@ QString MobyGames::removeStopwords(QString &searchName) {
     return s.join(" ");
 }
 
-void MobyGames::getGameData(GameEntry &game, int media) {
+void MobyGames::getGameData(GameEntry &game) {
     limiter.exec();
     ncprintf("Waiting to get game data...");
     fflush(stdout);
@@ -172,7 +172,7 @@ void MobyGames::getGameData(GameEntry &game, int media) {
     }
 
     jsonObj = jsonDoc.object()["games"].toArray()[0].toObject();
-    populateGameEntry(game, media);
+    populateGameEntry(game);
 }
 
 void MobyGames::getReleaseDate(GameEntry &game) {

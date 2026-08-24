@@ -35,7 +35,7 @@ public:
     LocalScraper(Settings *config, QSharedPointer<NetManager> manager);
     void runPasses(QList<GameEntry> &, const QFileInfo &, QString &,
                    QString &) override;
-    void getGameData(GameEntry &, int) override;
+    void getGameData(GameEntry &) override;
 };
 
 #endif // LOCALSCRAPER_H

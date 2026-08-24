@@ -82,7 +82,7 @@ QString ESGameList::getElementText(GameEntry::Elem key) {
     return gameNode.firstChildElement(GameEntry::getTag(key)).text();
 }
 
-void ESGameList::getGameData(GameEntry &game, int media) {
+void ESGameList::getGameData(GameEntry &game) {
     if (gameNode.isNull())
         return;
 

@@ -97,13 +97,13 @@ ImportScraper::ImportScraper(Settings *config,
     loadDefinitions();
 }
 
-void ImportScraper::getGameData(GameEntry &game, int media) {
+void ImportScraper::getGameData(GameEntry &game) {
     // Always reset game title at this point, to avoid saving the dummy title in
     // cache
     game.title = "";
 
     loadData();
-    populateGameEntry(game, media);
+    populateGameEntry(game);
 }
 
 void ImportScraper::runPasses(QList<GameEntry> &gameEntries,

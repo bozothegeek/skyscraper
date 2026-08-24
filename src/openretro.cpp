@@ -174,7 +174,7 @@ void OpenRetro::getSearchResults(QList<GameEntry> &gameEntries,
     }
 }
 
-void OpenRetro::getGameData(GameEntry &game, int media) {
+void OpenRetro::getGameData(GameEntry &game) {
     if (!game.url.isEmpty()) {
         netComm->request(game.url);
         q.exec();
@@ -183,7 +183,7 @@ void OpenRetro::getGameData(GameEntry &game, int media) {
 
     // Remove all the variants so we don't choose between their screenshots
     data = data.left(data.indexOf("</table></div><div id='"));
-    populateGameEntry(game, media);
+    populateGameEntry(game);
 }
 
 void OpenRetro::getDescription(GameEntry &game) {

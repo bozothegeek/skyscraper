@@ -174,7 +174,7 @@ GameEntry ZxInfoDk::createMinimumGameEntry(const QString &id,
     return game;
 }
 
-void ZxInfoDk::getGameData(GameEntry &game, int media) {
+void ZxInfoDk::getGameData(GameEntry &game) {
     const QString gameUrl =
         QString("%1/games/%2?mode=compact").arg(baseUrl).arg(game.id, 7, '0');
     netComm->request(gameUrl, nullptr, headers);
@@ -187,7 +187,7 @@ void ZxInfoDk::getGameData(GameEntry &game, int media) {
         return;
 
     jsonObj = jsonDoc.object()["_source"].toObject();
-    populateGameEntry(game, media);
+    populateGameEntry(game);
 }
 
 void ZxInfoDk::getCover(GameEntry &game) {

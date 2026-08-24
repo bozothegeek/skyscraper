@@ -46,7 +46,7 @@ private:
                                   QString &debug) override;
     void getSearchResults(QList<GameEntry> &gameEntries, QString searchName,
                           QString platform) override;
-    void getGameData(GameEntry &game, int media) override;
+    void getGameData(GameEntry &game) override;
 
     void getDeveloper(GameEntry &game) override;
     void getPlayers(GameEntry &game) override;

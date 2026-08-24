@@ -87,7 +87,7 @@ void ArcadeDB::getSearchResults(QList<GameEntry> &gameEntries,
     gameEntries.append(game);
 }
 
-void ArcadeDB::getGameData(GameEntry &game, int media) { populateGameEntry(game, media); }
+void ArcadeDB::getGameData(GameEntry &game) { populateGameEntry(game); }
 
 void ArcadeDB::getReleaseDate(GameEntry &game) {
     game.releaseDate = jsonObj.value("year").toString();

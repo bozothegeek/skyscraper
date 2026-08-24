@@ -169,7 +169,7 @@ void TheGamesDb::getSearchResults(QList<GameEntry> &gameEntries,
     }
 }
 
-void TheGamesDb::getGameData(GameEntry &game, int media) {
+void TheGamesDb::getGameData(GameEntry &game) {
     qDebug() << "Per game url:" << game.url;
     netComm->request(game.url);
     q.exec();
@@ -192,7 +192,7 @@ void TheGamesDb::getGameData(GameEntry &game, int media) {
                   .toArray()
                   .first()
                   .toObject();
-    populateGameEntry(game, media);
+    populateGameEntry(game);
 }
 
 void TheGamesDb::getReleaseDate(GameEntry &game) {

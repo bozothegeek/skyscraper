@@ -173,7 +173,7 @@ void GamebaseScraper::getSearchResults(QList<GameEntry> &gameEntries,
     }
 }
 
-void GamebaseScraper::getGameData(GameEntry &game, int media) {
+void GamebaseScraper::getGameData(GameEntry &game) {
     QSqlQuery q;
     q.prepare(SQL_ONE_NAME);
     q.bindValue(":id", game.id);
@@ -213,7 +213,7 @@ void GamebaseScraper::getGameData(GameEntry &game, int media) {
     }
     q.clear();
     // get cover
-    populateGameEntry(game, media);
+    populateGameEntry(game);
 }
 
 QList<QString> GamebaseScraper::getSearchNames(const QFileInfo &info,

@@ -381,8 +381,8 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
     }
 }
 
-void ScreenScraper::getGameData(GameEntry &game, int media) {
-    populateGameEntry(game, media);
+void ScreenScraper::getGameData(GameEntry &game) {
+    populateGameEntry(game);
 }
 
 void ScreenScraper::getReleaseDate(GameEntry &game) {

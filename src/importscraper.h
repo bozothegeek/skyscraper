@@ -38,7 +38,7 @@ public:
 
     void runPasses(QList<GameEntry> &gameEntries, const QFileInfo &info,
                    QString &, QString &) override;
-    void getGameData(GameEntry &game, int media) override;
+    void getGameData(GameEntry &game) override;
     QString getCompareTitle(const QFileInfo &info) override;
 
     void getAges(GameEntry &game) override;
