@@ -399,6 +399,11 @@ void ScraperWorker::run() {
         game.publisher = StrTools::xmlUnescape(game.publisher);
         game.tags = StrTools::xmlUnescape(game.tags);
         game.tags = StrTools::conformTags(game.tags);
+
+        game.ra = StrTools::conformTags(game.ra);
+        game.crc = StrTools::conformTags(game.crc);
+        game.md5 = StrTools::conformTags(game.md5);
+
         game.rating = StrTools::xmlUnescape(game.rating);
 
         game.players = StrTools::xmlUnescape(game.players);
@@ -413,7 +418,7 @@ void ScraperWorker::run() {
         if (scrpr == "worldofspectrum") {
             scrpr = "zxinfo (formerly: worldofspectrum)";
         }
-        output.append("Scraper:        " + scrpr + "\n");
+        output.append("Scraper:         " + scrpr + "\n");
         if (!cacheScraper && config.scraper != "import") {
             output.append(
                 "From cache:     " +
@@ -422,14 +427,14 @@ void ScraperWorker::run() {
                          ? "YES (refresh from source with '--cache refresh')"
                          : "NO")) +
                 "\n");
-            output.append("Search match:   " + QString::number(searchMatch) +
+            output.append("Search match:    " + QString::number(searchMatch) +
                           " %\n");
-            output.append("Compare title:  '\033[1;32m" + compareTitle +
+            output.append("Compare title:   '\033[1;32m" + compareTitle +
                           "\033[0m'\n");
-            output.append("Result title:   '\033[1;32m" + game.title +
+            output.append("Result title:    '\033[1;32m" + game.title +
                           "\033[0m' (" + game.titleSrc + ")\n");
         } else {
-            output.append("Title:          '\033[1;32m" + game.title +
+            output.append("Title:           '\033[1;32m" + game.title +
                           "\033[0m' (" + game.titleSrc + ")\n");
         }
 
@@ -482,9 +487,9 @@ void ScraperWorker::run() {
                 }
             }
         }
-        output.append("Platform:       '\033[1;32m" + game.platform +
+        output.append("Platform:        '\033[1;32m" + game.platform +
                       "\033[0m' (" + game.platformSrc + ")\n");
-        output.append("Release Date:   '\033[1;32m");
+        output.append("Release Date:    '\033[1;32m");
         if (game.releaseDate.isEmpty()) {
             output.append("\033[0m' ()\n");
         } else {
@@ -492,21 +497,27 @@ void ScraperWorker::run() {
                               .toString("yyyy-MM-dd") +
                           "\033[0m' (" + game.releaseDateSrc + ")\n");
         }
-        output.append("Developer:      '\033[1;32m" + game.developer +
+        output.append("Developer:       '\033[1;32m" + game.developer +
                       "\033[0m' (" + game.developerSrc + ")\n");
-        output.append("Publisher:      '\033[1;32m" + game.publisher +
+        output.append("Publisher:       '\033[1;32m" + game.publisher +
                       "\033[0m' (" + game.publisherSrc + ")\n");
-        output.append("Players:        '\033[1;32m" + game.players +
+        output.append("Players:         '\033[1;32m" + game.players +
                       "\033[0m' (" + game.playersSrc + ")\n");
-        output.append("Ages:           '\033[1;32m" + game.ages +
+        output.append("Ages:            '\033[1;32m" + game.ages +
                       (game.ages.toInt() != 0 ? "+" : "") + "\033[0m' (" +
                       game.agesSrc + ")\n");
-        output.append("Tags:           '\033[1;32m" + game.tags + "\033[0m' (" +
+        output.append("Tags:            '\033[1;32m" + game.tags + "\033[0m' (" +
                       game.tagsSrc + ")\n");
-        output.append("Rating (0-1):   '\033[1;32m" + game.rating +
+        output.append("Retroachievement:'\033[1;32m" + game.ra + "\033[0m' (" +
+                      game.raSrc + ")\n");
+        output.append("Crc:             '\033[1;32m" + game.crc + "\033[0m' (" +
+                      game.crcSrc + ")\n");
+        output.append("Md5:             '\033[1;32m" + game.md5 + "\033[0m' (" +
+                      game.md5Src + ")\n");
+        output.append("Rating (0-1):    '\033[1;32m" + game.rating +
                       "\033[0m' (" + game.ratingSrc + ")\n");
         output.append(
-            "Cover:          " +
+                      "Cover:           " +
             QString((game.coverSrc.isEmpty() && game.coverData.isNull()
                          ? "\033[1;31mNO"
                          : "\033[1;32mYES")) +
@@ -514,7 +525,7 @@ void ScraperWorker::run() {
             QString((config.cacheCovers || cacheScraper ? "" : " (uncached)")) +
             " (" + game.coverSrc + ")\n");
         output.append(
-            "Screenshot:     " +
+                      "Screenshot:      " +
             QString(
                 (game.screenshotSrc.isEmpty() && game.screenshotData.isNull()
                      ? "\033[1;31mNO"
@@ -525,7 +536,7 @@ void ScraperWorker::run() {
             " (" + game.screenshotSrc + ")\n");
         if (config.cacheScreenshottitles) {
             output.append(
-                "ScreenshotTitle:     " +
+                      "ScreenshotTitle: " +
                 QString(
                     (game.screenshottitleSrc.isEmpty() && game.screenshottitleData.isNull()
                          ? "\033[1;31mNO"
@@ -537,7 +548,7 @@ void ScraperWorker::run() {
         }
         if (config.cache3dcovers) {
             output.append(
-                "3Dcover:     " +
+                      "3Dcover:         " +
                 QString(
                     (game.threedcoverSrc.isEmpty() && game.threedcoverData.isNull()
                          ? "\033[1;31mNO"
@@ -549,7 +560,7 @@ void ScraperWorker::run() {
         }
         if (config.cacheFullcovers) {
             output.append(
-                "Fullcover:     " +
+                      "Fullcover:       " +
                 QString(
                     (game.fullcoverSrc.isEmpty() && game.fullcoverData.isNull()
                          ? "\033[1;31mNO"
@@ -561,7 +572,7 @@ void ScraperWorker::run() {
         }
         if (config.cacheMaps) {
             output.append(
-                "Map:     " +
+                      "Map:             " +
                 QString(
                     (game.mapSrc.isEmpty() && game.mapData.isNull()
                          ? "\033[1;31mNO"
@@ -575,7 +586,7 @@ void ScraperWorker::run() {
         // gl creation avoid signaling NO to the user. wheeldata is set when
         // found in scraping mode.
         output.append(
-            "Wheel:          " +
+                      "Wheel:           " +
             QString((game.wheelSrc.isEmpty() && game.wheelData.isEmpty()
                          ? "\033[1;31mNO"
                          : "\033[1;32mYES")) +
@@ -583,7 +594,7 @@ void ScraperWorker::run() {
             QString((config.cacheWheels || cacheScraper ? "" : " (uncached)")) +
             " (" + game.wheelSrc + ")\n");
         output.append(
-            "Marquee:        " +
+                      "Marquee:         " +
             QString((game.marqueeSrc.isEmpty() && game.marqueeData.isNull()
                          ? "\033[1;31mNO"
                          : "\033[1;32mYES")) +
@@ -592,7 +603,7 @@ void ScraperWorker::run() {
                 (config.cacheMarquees || cacheScraper ? "" : " (uncached)")) +
             " (" + game.marqueeSrc + ")\n");
         output.append(
-            "Texture:        " +
+                      "Texture:         " +
             QString((game.textureSrc.isEmpty() && game.textureData.isNull()
                          ? "\033[1;31mNO"
                          : "\033[1;32mYES")) +
@@ -602,7 +613,7 @@ void ScraperWorker::run() {
             " (" + game.textureSrc + ")\n");
         if (config.videos || config.cacheVideos) {
             output.append(
-                "Video:          " +
+                      "Video:           " +
                 QString((game.videoFormat.isEmpty() ? "\033[1;31mNO"
                                                     : "\033[1;32mYES")) +
                 "\033[0m" +
@@ -613,7 +624,7 @@ void ScraperWorker::run() {
         }
         if (config.manuals || config.cacheManuals) {
             output.append(
-                "Manual:         " +
+                      "Manual:          " +
                 QString((game.manualSrc.isEmpty() && game.manualData.isEmpty()
                              ? "\033[1;31mNO"
                              : "\033[1;32mYES")) +
@@ -621,14 +632,15 @@ void ScraperWorker::run() {
         }
         if (config.fanart || config.cacheFanarts) {
             output.append(
-                "Fanart:         " +
+                      "Fanart:          " +
                 QString((game.fanartSrc.isEmpty() && game.fanartData.isEmpty()
                              ? "\033[1;31mNO"
                              : "\033[1;32mYES")) +
                 "\033[0m (" + game.fanartSrc + ")\n");
         }
         if (config.backcovers || config.cacheBackcovers) {
-            output.append("Backcover:      " +
+            output.append(
+                      "Backcover:       " +
                           QString((game.backcoverSrc.isEmpty() &&
                                            game.backcoverData.isEmpty()
                                        ? "\033[1;31mNO"

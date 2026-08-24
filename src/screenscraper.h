@@ -62,6 +62,9 @@ private:
     void getRating(GameEntry &game) override;
     void getDescription(GameEntry &game) override;
     void getTags(GameEntry &game) override;
+    void getRA(GameEntry &game) override;
+    void getCrc(GameEntry &game) override;
+    void getMd5(GameEntry &game) override;
 
     void getCover(GameEntry &game) override;
     void getScreenshot(GameEntry &game) override;

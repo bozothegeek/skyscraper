@@ -60,7 +60,10 @@ public:
         THREEDCOVER = 0x80000,
         FULLCOVER = 0x100000,
         MAP = 0x200000,
-        ALL = (MAP << 1) - 1
+        RA = 0x400000,
+        CRC = 0x800000,
+        MD5 = 0x1000000,
+        ALL = (MD5 << 1) - 1
     };
     Q_DECLARE_FLAGS(Types, Elem)
 
@@ -83,6 +86,9 @@ public:
                                      {PUBLISHER, "publisher"},
                                      {PLAYERS, "players"},
                                      {TAGS, "genre"},
+                                     {RA, "retroachievement"},
+                                     {CRC, "hash"}, //keep hash to be compatible with legacy scraper/retrogaming OS
+                                     {MD5, "md5"},
                                      {RELEASEDATE, "releasedate"},
                                      {SCREENSHOT, "image"},
                                      {VIDEO, "video"},
@@ -143,6 +149,12 @@ public:
     QString publisherSrc = "";
     QString tags = "";
     QString tagsSrc = "";
+    QString ra = "";
+    QString raSrc = "";
+    QString crc = "";
+    QString crcSrc = "";
+    QString md5 = "";
+    QString md5Src = "";
     QString players = "";
     QString playersSrc = "";
     QString ages = "";

@@ -126,6 +126,15 @@ void AbstractScraper::populateGameEntry(GameEntry &game) {
         case GameEntry::Elem::TAGS:
                 getTags(game);
             break;
+        case GameEntry::Elem::RA:
+            getRA(game);
+            break;
+        case GameEntry::Elem::CRC:
+            getCrc(game);
+            break;
+        case GameEntry::Elem::MD5:
+            getMd5(game);
+            break;
         case GameEntry::Elem::RELEASEDATE:
                 getReleaseDate(game);
             break;
@@ -336,6 +345,51 @@ void AbstractScraper::getTags(GameEntry &game) {
         nomNom(nom);
     }
     game.tags = data.left(data.indexOf(tagsPost.toUtf8()));
+}
+
+void AbstractScraper::getRA(GameEntry &game) {
+    if (RAPre.isEmpty()) {
+        return;
+    }
+    for (const auto &nom : RAPre) {
+        if (!checkNom(nom)) {
+            return;
+        }
+    }
+    for (const auto &nom : RAPre) {
+        nomNom(nom);
+    }
+    game.ra = data.left(data.indexOf(RAPost.toUtf8()));
+}
+
+void AbstractScraper::getCrc(GameEntry &game) {
+    if (crcPre.isEmpty()) {
+        return;
+    }
+    for (const auto &nom : crcPre) {
+        if (!checkNom(nom)) {
+            return;
+        }
+    }
+    for (const auto &nom : crcPre) {
+        nomNom(nom);
+    }
+    game.crc = data.left(data.indexOf(crcPost.toUtf8()));
+}
+
+void AbstractScraper::getMd5(GameEntry &game) {
+    if (md5Pre.isEmpty()) {
+        return;
+    }
+    for (const auto &nom : md5Pre) {
+        if (!checkNom(nom)) {
+            return;
+        }
+    }
+    for (const auto &nom : md5Pre) {
+        nomNom(nom);
+    }
+    game.md5 = data.left(data.indexOf(md5Post.toUtf8()));
 }
 
 // TODO: openretro

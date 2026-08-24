@@ -335,6 +335,36 @@ void ImportScraper::getTags(GameEntry &game) {
     }
 }
 
+void ImportScraper::getRA(GameEntry &game) {
+    if (isXml) {
+        game.ra = getElementText(RAPre);
+    } else {
+        QByteArray dataOrig = data;
+        AbstractScraper::getRA(game);
+        data = dataOrig;
+    }
+}
+
+void ImportScraper::getCrc(GameEntry &game) {
+    if (isXml) {
+        game.crc = getElementText(crcPre);
+    } else {
+        QByteArray dataOrig = data;
+        AbstractScraper::getCrc(game);
+        data = dataOrig;
+    }
+}
+
+void ImportScraper::getMd5(GameEntry &game) {
+    if (isXml) {
+        game.md5 = getElementText(md5Pre);
+    } else {
+        QByteArray dataOrig = data;
+        AbstractScraper::getMd5(game);
+        data = dataOrig;
+    }
+}
+
 void ImportScraper::getTitle(GameEntry &game) {
     if (titlePre.isEmpty()) {
         return;
@@ -402,6 +432,9 @@ bool ImportScraper::loadDefinitions() {
             isXml |= checkForTag(agesPre, agesPost, agesTag, line);
             isXml |= checkForTag(ratingPre, ratingPost, ratingTag, line);
             isXml |= checkForTag(tagsPre, tagsPost, tagsTag, line);
+            isXml |= checkForTag(RAPre, RAPost, RATag, line);
+            isXml |= checkForTag(crcPre, crcPost, crcTag, line);
+            isXml |= checkForTag(md5Pre, md5Post, md5Tag, line);
             isXml |= checkForTag(releaseDatePre, releaseDatePost,
                                  releaseDateTag, line);
             isXml |= checkForTag(descriptionPre, descriptionPost,

@@ -57,6 +57,9 @@ struct ResCounts {
     int players;
     int ages;
     int tags;
+    int retroachievements;
+    int crcs;
+    int md5s;
     int ratings;
     int releaseDates;
     int covers;

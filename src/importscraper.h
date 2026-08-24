@@ -56,6 +56,9 @@ public:
     void getFullcover(GameEntry &game) override;
     void getMap(GameEntry &game) override;
     void getTags(GameEntry &game) override;
+    void getRA(GameEntry &game) override;
+    void getCrc(GameEntry &game) override;
+    void getMd5(GameEntry &game) override;
     void getTexture(GameEntry &game) override;
     void getTitle(GameEntry &game) override;
     void getVideo(GameEntry &game) override;
@@ -82,6 +85,9 @@ private:
     QString agesTag = "###AGES###";
     QString ratingTag = "###RATING###";
     QString tagsTag = "###TAGS###";
+    QString RATag = "###RA###";
+    QString crcTag = "###HASH###";
+    QString md5Tag = "###MD5###";
     QString releaseDateTag = "###RELEASEDATE###";
 
     QList<QFileInfo> textual;

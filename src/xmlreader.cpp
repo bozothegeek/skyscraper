@@ -199,7 +199,17 @@ void XmlReader::addTextual(GameEntry &entry, const QDomNode &node) {
         node.firstChildElement(GameEntry::getTag(GameEntry::Elem::PUBLISHER))
             .text();
     entry.tags =
-        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::TAGS)).text();
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::TAGS))
+            .text();
+    entry.ra =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::RA))
+            .text();
+    entry.crc =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::CRC))
+            .text();
+    entry.md5 =
+        node.firstChildElement(GameEntry::getTag(GameEntry::Elem::MD5))
+            .text();
     entry.rating =
         node.firstChildElement(GameEntry::getTag(GameEntry::Elem::RATING))
             .text();

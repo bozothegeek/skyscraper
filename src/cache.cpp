@@ -90,8 +90,9 @@ Excludes operator&(Excludes lhs, Excludes rhs) {
 static inline QStringList txtTypes(bool useGenres = true) {
     // keep order for cache edit menu
     QStringList txtTypes = {"title",     "platform", "releasedate", "developer",
-                            "publisher", "players",  "ages"};
+                            "publisher", "players",  "ages",};
     txtTypes.append(useGenres ? "genres" : "tags");
+    txtTypes += {"retroachievement", "crc", "md5"};
     txtTypes += {"rating", "description"};
     return txtTypes;
 }
@@ -300,6 +301,9 @@ void Cache::printPriorities(QString cacheId) {
                       {"Players", {game.players, game.playersSrc}},
                       {"Ages", {game.ages, game.agesSrc}},
                       {"Tags", {game.tags, game.tagsSrc}},
+                      {"Retroachievment", {game.ra, game.raSrc}},
+                      {"Hash", {game.crc, game.crcSrc}},
+                      {"Md5", {game.md5, game.md5Src}},
                       {"Rating", {game.rating, game.ratingSrc}}};
 
     const QString pad = "              ";
@@ -486,7 +490,7 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                     ncprintf("\033[1;34mWhich resource type would you like to "
                              "create?\033[0m (Enter to cancel)\n");
                     const QList<QPair<QString, QString>> newResMenuItems = {
-                        {"TItle", game.titleSrc},
+                        {"Title", game.titleSrc},
                         {"Platform", game.platformSrc},
                         {"Release Date", game.releaseDateSrc},
                         {"Developer", game.developerSrc},
@@ -494,6 +498,9 @@ int Cache::editResources(QSharedPointer<Queue> queue, const QString &command,
                         {"Number of players", game.playersSrc},
                         {"Age rating", game.agesSrc},
                         {"Genres", game.tagsSrc},
+                        {"Retroachievement", game.raSrc},
+                        {"Crc", game.crcSrc},
+                        {"Md5", game.md5Src},
                         {"Game rating", game.ratingSrc},
                         {"Description", game.descriptionSrc}};
 
@@ -1383,13 +1390,13 @@ void Cache::showStats(int verbosity) {
 
 void Cache::printStats(bool totals) {
     QMap<QString, int> resTotals = {
-        {"Titles", 0},       {"Platforms", 0},  {"Descriptions", 0},
-        {"Publishers", 0},   {"Developers", 0}, {"Players", 0},
-        {"Ages", 0},         {"Tags", 0},       {"Ratings", 0},
-        {"ReleaseDates", 0}, {"Covers", 0},     {"Screenshots", 0},
-        {"Screenshottitles", 0}, {"3dcovers", 0}, {"Fullcovers", 0}, {"Map", 0},
-        {"Wheels", 0},       {"Marquees", 0},   {"Textures", 0},
-        {"Videos", 0},       {"Manuals", 0},    {"Fanarts", 0},
+        {"Titles", 0},           {"Platforms", 0},    {"Descriptions", 0}, {"Publishers", 0},
+        {"Developers", 0},       {"Players", 0},      {"Ages", 0},         {"Tags", 0},
+        {"Retroachievement", 0}, {"Crc", 0},          {"Md5", 0},
+        {"Ratings", 0},          {"ReleaseDates", 0}, {"Covers", 0},       {"Screenshots", 0},
+        {"Screenshottitles", 0}, {"3dcovers", 0},     {"Fullcovers", 0},   {"Map", 0},
+        {"Wheels", 0},           {"Marquees", 0},     {"Textures", 0},
+        {"Videos", 0},           {"Manuals", 0},      {"Fanarts", 0},
         {"Backcovers", 0}};
     for (auto it = resCountsMap.begin(); it != resCountsMap.end(); ++it) {
         if (!totals) {
@@ -1404,6 +1411,9 @@ void Cache::printStats(bool totals) {
         resTotals["Players"] += it.value().players;
         resTotals["Ages"] += it.value().ages;
         resTotals["Tags"] += it.value().tags;
+        resTotals["Retroachievment"] += it.value().retroachievements;
+        resTotals["Crc"] += it.value().crcs;
+        resTotals["Md5"] += it.value().md5s;
         resTotals["Ratings"] += it.value().ratings;
         resTotals["ReleaseDates"] += it.value().releaseDates;
         resTotals["Covers"] += it.value().covers;
@@ -1452,6 +1462,12 @@ void Cache::addToResCounts(const QString source, const QString type) {
         resCountsMap[source].ages++;
     } else if (type == "tags") {
         resCountsMap[source].tags++;
+    } else if (type == "retroachievement") {
+        resCountsMap[source].retroachievements++;
+    } else if (type == "crc") {
+        resCountsMap[source].crcs++;
+    } else if (type == "md5") {
+        resCountsMap[source].md5s++;
     } else if (type == "rating") {
         resCountsMap[source].ratings++;
     } else if (type == "releasedate") {
@@ -1745,6 +1761,9 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
         {"players", entry.players},
         {"ages", entry.ages},
         {"tags", entry.tags},
+        {"retroachievement", entry.ra},
+        {"crc", entry.crc},
+        {"md5", entry.md5},
         {"rating", entry.rating},
         {"releasedate", entry.releaseDate}};
 
@@ -2116,6 +2135,15 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
             } else if (type == "tags") {
                 entry.tags = result;
                 entry.tagsSrc = source;
+            } else if (type == "retroachievement") {
+                entry.ra = result;
+                entry.raSrc = source;
+            } else if (type == "crc") {
+                entry.crc = result;
+                entry.crcSrc = source;
+            } else if (type == "md5") {
+                entry.md5 = result;
+                entry.md5Src = source;
             } else if (type == "rating") {
                 entry.rating = result;
                 entry.ratingSrc = source;

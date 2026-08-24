@@ -73,6 +73,9 @@ ScreenScraper::ScreenScraper(Settings *config,
     fetchOrder.append(GameEntry::Elem::DESCRIPTION);
     fetchOrder.append(GameEntry::Elem::RELEASEDATE);
     fetchOrder.append(GameEntry::Elem::TAGS);
+    fetchOrder.append(GameEntry::Elem::RA);
+    fetchOrder.append(GameEntry::Elem::CRC);
+    fetchOrder.append(GameEntry::Elem::MD5);
     fetchOrder.append(GameEntry::Elem::SCREENSHOT);
     fetchOrder.append(GameEntry::Elem::SCREENSHOTTITLE);
     fetchOrder.append(GameEntry::Elem::COVER);
@@ -455,6 +458,18 @@ void ScreenScraper::getTags(GameEntry &game) {
     }
 
     game.tags.chop(2);
+}
+
+void ScreenScraper::getRA(GameEntry &game) {
+    game.ra = jsonObj["rom"].toObject()["retroachievement"].toString();
+}
+
+void ScreenScraper::getCrc(GameEntry &game) {
+    game.crc = jsonObj["rom"].toObject()["romcrc"].toString().toUpper();
+}
+
+void ScreenScraper::getMd5(GameEntry &game) {
+    game.md5 = jsonObj["rom"].toObject()["rommd5"].toString().toUpper();
 }
 
 QByteArray ScreenScraper::downloadImageWithRetry(const QString &url) {

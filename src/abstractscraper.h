@@ -82,6 +82,9 @@ protected:
     virtual void getPlayers(GameEntry &game);
     virtual void getAges(GameEntry &game);
     virtual void getTags(GameEntry &game);
+    virtual void getRA(GameEntry &game);
+    virtual void getCrc(GameEntry &game);
+    virtual void getMd5(GameEntry &game);
     virtual void getRating(GameEntry &game);
     virtual void getReleaseDate(GameEntry &game);
     virtual void getCover(GameEntry &game);
@@ -143,6 +146,12 @@ protected:
     QString agesPost;
     QList<QString> tagsPre;
     QString tagsPost;
+    QList<QString> RAPre;
+    QString RAPost;
+    QList<QString> crcPre;
+    QString crcPost;
+    QList<QString> md5Pre;
+    QString md5Post;
     QList<QString> ratingPre;
     QString ratingPost;
     QList<QString> releaseDatePre;

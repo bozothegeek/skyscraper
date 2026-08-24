@@ -173,6 +173,12 @@ QString Pixl::createXml(GameEntry &entry) {
                   entry.publisher, addEmptyElem));
     l.append(elem(GameEntry::getTag(GameEntry::Elem::TAGS), entry.tags,
                   addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::RA), entry.ra,
+                  addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::CRC), entry.crc,
+                  addEmptyElem));
+    l.append(elem(GameEntry::getTag(GameEntry::Elem::MD5), entry.md5,
+                  addEmptyElem));
     l.append(elem(GameEntry::getTag(GameEntry::Elem::PLAYERS), entry.players,
                   addEmptyElem));
 
