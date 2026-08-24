@@ -182,7 +182,7 @@ QString Pixl::createXml(GameEntry &entry) {
     l.append(elem(GameEntry::getTag(GameEntry::Elem::PLAYERS), entry.players,
                   addEmptyElem));
 
-           // write out non scraped elements
+    // write out non scraped elements
     const QString tagKidgame = GameEntry::getTag(GameEntry::Elem::AGES);
     for (const auto &t : extraGamelistTags(entry.isFolder)) {
         if (t != tagKidgame) {
@@ -190,12 +190,13 @@ QString Pixl::createXml(GameEntry &entry) {
         }
     }
     QString kidGame = entry.getEsExtra(tagKidgame);
+    entry.ages = StrTools::conformAges(entry.ages);
     if (kidGame.isEmpty() && entry.ages.toInt() >= 1 &&
         entry.ages.toInt() <= 10) {
         kidGame = "true";
     }
-
     l.append(elem(tagKidgame, kidGame, false));
+    l.append(elem("classification", entry.ages % (entry.ages.toInt() != 0 ? "+" : ""), false));
 
     //especially for media
     l += createEsVariantXml(entry);
